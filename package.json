@@ -1,0 +1,19 @@
+{
+  "name": "ril-chrome",
+  "version": "3.0.0",
+  "description": "Unnoficial Pocket Client - Chrome Extension",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/diegonakamashi/ril-chrome.git"
+  },
+  "author": "Diego Nakamashi",
+  "license": "BSD",
+  "gitHead": "db644443866f341c45a04c8c63d719c27c6eb66d",
+  "readmeFilename": "README",
+  "bugs": {
+    "url": "https://github.com/diegonakamashi/ril-chrome/issues"
+  }
+}
