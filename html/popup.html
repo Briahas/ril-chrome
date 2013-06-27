@@ -1,4 +1,4 @@
-<html ng-app="" ng-csp>
+<html ng-app="PocketUExtension" ng-csp>
 <head>
   <link rel="stylesheet" type="text/css" href="../stylesheet/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="../stylesheet/font-awesome.min.css">
@@ -6,7 +6,9 @@
   <script type="text/javascript" src="../3rdparty/angular.min.js"></script>
   <script type="text/javascript" src="../3rdparty/ejs-production.js"></script>
   <script type="text/javascript" src="../3rdparty/jquery.quicksearch.js"></script>
-  <script type="text/javascript" src="../js/pocketController.js"></script>
+  <script type="text/javascript" src="../app/app.js"></script>
+  <script type="text/javascript" src="../app/factory/itemsFactory.js"></script>
+  <script type="text/javascript" src="../app/controller/itemsController.js"></script>
 </head>
 <body>
   <div>
@@ -22,9 +24,10 @@
       </select>
     </div>
   </header>
-  <div id="list">
-    <table cellpadding="5" width='95%' ng-controller="PocketController">
+  <div id="list" ng-controller="ItemsController">
+    <table cellpadding="5" width='95%'>
       <tbody>
+      <!--
         <tr ng-repeat="item in getItems()">
           <td>
             <span><img src="{{item.faviconUrl}}" /></span>
@@ -36,8 +39,10 @@
             Mark As Read  
           </td>
         </tr>
+      -->
       </tbody>
     </table>
+    <input type="button" name="getAllItems" id="getAllItems" value="getAllitems" ng-click="getItems()" />
   </div>
 </div>
 </body>
