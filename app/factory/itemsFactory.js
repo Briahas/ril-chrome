@@ -3,7 +3,7 @@ app.ItemsFactory = function($http){
   var factory = {};
   var items = [];
 
-  factory.all = function(){
+  factory.refresh = function(){
     var url = "https://getpocket.com/v3/get";
     var params = {
       "sort": "oldest",
@@ -13,9 +13,16 @@ app.ItemsFactory = function($http){
     
     $http.post(url, params).
     success(function(data, status){
-      return data;
+      if (status == 200) {
+        for(var key in data.list){
+          items.push(new app.Item(data.list[key]));
+        }
+      }
     });
+  }
 
+  factory.all = function(){
+    return items;
   };
 
   factory.markAsRead = function del(item){

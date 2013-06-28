@@ -7,6 +7,7 @@
   <script type="text/javascript" src="../3rdparty/ejs-production.js"></script>
   <script type="text/javascript" src="../3rdparty/jquery.quicksearch.js"></script>
   <script type="text/javascript" src="../app/app.js"></script>
+  <script type="text/javascript" src="../app/model/item.js"></script>
   <script type="text/javascript" src="../app/factory/itemsFactory.js"></script>
   <script type="text/javascript" src="../app/controller/itemsController.js"></script>
 </head>
@@ -27,22 +28,20 @@
   <div id="list" ng-controller="ItemsController">
     <table cellpadding="5" width='95%'>
       <tbody>
-      <!--
         <tr ng-repeat="item in getItems()">
           <td>
-            <span><img src="{{item.faviconUrl}}" /></span>
+            <span><img src="{{item.getFaviconUrl()}}" /></span>
           </td>
           <td>
-            <a href="{{item.url}}">{{item.title}}</a>
+            <a href="{{item.getUrl()}}">{{item.getTitle()}}</a>
           </td>
           <td>
             Mark As Read  
           </td>
         </tr>
-      -->
       </tbody>
+    <input type="button" name="getAllItems" id="getAllItems" value="getAllitems" ng-click="refresh()" />
     </table>
-    <input type="button" name="getAllItems" id="getAllItems" value="getAllitems" ng-click="getItems()" />
   </div>
 </div>
 </body>
