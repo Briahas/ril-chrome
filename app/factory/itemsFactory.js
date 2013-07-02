@@ -15,14 +15,21 @@ app.ItemsFactory = function($http){
     success(function(data, status){
       if (status == 200) {
         for(var key in data.list){
-          items.push(new app.Item(data.list[key]));
+          items.push(data.list[key]);
         }
+
+      localStorage['lastResponse'] = JSON.stringify(items);
       }
     });
   }
 
-  factory.all = function(){
-    return items;
+  factory.all = function(orderBy){
+    var items = JSON.parse(localStorage['lastResponse'])
+    var itemsModelList = []
+    for(var i = 0; i < items.length; i++){
+      itemsModelList.push(new app.Item(items[i]))
+    }
+    return itemsModelList;
   };
 
   factory.markAsRead = function del(item){
