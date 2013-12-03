@@ -1,7 +1,8 @@
 app.ItemsFactory = function($http){
   CONSUMER_KEY="11758-a73b85ac41814ed5b483f3a3";
   var factory = {};
-  var items = [];
+  factory.items = [];
+  factory.itemsModelList = []
 
   factory.refresh = function(){
     var url = "https://getpocket.com/v3/get";
@@ -15,21 +16,20 @@ app.ItemsFactory = function($http){
     success(function(data, status){
       if (status == 200) {
         for(var key in data.list){
-          items.push(data.list[key]);
+          factory.items.push(data.list[key]);
         }
-
-      localStorage['lastResponse'] = JSON.stringify(items);
+        localStorage['lastResponse'] = JSON.stringify(factory.items);
+      }
+      var items = JSON.parse(localStorage['lastResponse'])
+      factory.itemsModelList = []
+      for(var i = 0; i < items.length; i++){
+        factory.itemsModelList.push(new app.Item(items[i]))
       }
     });
   }
 
   factory.all = function(orderBy){
-    var items = JSON.parse(localStorage['lastResponse'])
-    var itemsModelList = []
-    for(var i = 0; i < items.length; i++){
-      itemsModelList.push(new app.Item(items[i]))
-    }
-    return itemsModelList;
+    return factory.itemsModelList;
   };
 
   factory.markAsRead = function del(item){
