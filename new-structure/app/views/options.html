@@ -1,0 +1,69 @@
+  <html>
+  <head>
+  <style>
+    
+    body{
+      font-family: 'Open Sans', Helvetica, Arial, serif;
+      font-size: 15px;
+    }
+
+    input{
+      font-family: 'Open Sans', Helvetica, Arial, serif;
+      font-size: 12px;
+      text-align:center;
+    }
+
+    select{
+      font-family: 'Open Sans', Helvetica, Arial, serif;
+      font-size: 12px;
+      text-align:center;
+    }
+
+    input:focus {
+      background-color: #FCFFCD;
+    }
+
+    #ril_name{
+      padding: 5px;
+    }
+
+    #ril_password{
+      padding: 5px;
+    }
+
+    fieldset{
+      border: 1px solid;
+    }
+  
+    .option_item_minor{
+      font-size: 12px;
+    }
+
+  </style>
+  <script type="text/javascript" src="../3rdparty/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="../js/options.js"></script>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+  </head>
+  <body>
+    <fieldset>  
+      <legend>I Will Read it Later</legend>
+      <p>
+        Keyboard Shortcut: Ctrl + Alt + <input id='ril_btn_shortcut' class='span2' type="text" size='1' maxlength='1'>
+      </p>
+      <p>Update Interval: 
+        <select id='ril_slc_updateinterval'> 
+          <option value=0>30 minutes</option>
+          <option value=1>1 hour</option>
+          <option value=2>2 hours</option>
+        </select>
+      </p>
+      <p>
+        <input id="mark_as_read_check" type="checkbox"/><label class="option_item_minor">Mark items as read when you click on them</label>
+      </p>
+      <p>
+        <input id="remove_context_menu_check" type="checkbox"/><label class="option_item_minor">Remove Context Menu</label>
+      </p>
+    </fieldset>
+  </body>
+  </html>

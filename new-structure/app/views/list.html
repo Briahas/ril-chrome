@@ -1,0 +1,30 @@
+   <header style="position: relative;">
+     <input id='search-input' type='text' size=25>
+     <span id="add-button" class="icon-header icon icon-bookmark" title="Add"></span>
+     <span ng-click='refresh()' id="sync-button" class="icon-header icon icon-refresh" title="Sync"></span>
+     <span id="options-button" class='icon-header icon icon-wrench' title="Settings"></span>
+     <div id="sort-select-div">
+      <select id="sort-select" onchange="order-by()">
+        <option value="old">Oldest</option>
+        <option value="new">Newest</option>
+      </select>
+    </div>
+  </header>
+  <div id="list">
+    <table cellpadding="5" width='95%'>
+      <tbody>
+        <tr ng-repeat="item in getItems()">
+          <td>
+            <span><img src="{{item.getFaviconUrl()}}" /></span>
+          </td>
+          <td>
+            <a href="{{item.resolved_url}}">{{item.resolved_title}}</a>
+          </td>
+          <td>
+            Mark As Read  
+          </td>
+        </tr>
+      </tbody>
+    <input type="button" name="getAllItems" id="getAllItems" value="getAllitems" ng-click="refresh()" />
+    </table>
+  </div>
