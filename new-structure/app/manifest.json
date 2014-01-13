@@ -12,7 +12,8 @@
     "http://readitlaterlist.com/",
     "https://getpocket.com/v3/",
     "tabs",
-    "contextMenus"
+    "contextMenus",
+    "storages"
   ],
    "background": {
     "scripts": ["scripts/chrome-extension-scripts/request.js", "scripts/chrome-extension-scripts/rilList.js", "scripts/chrome-extension-scripts/extensionIcon.js", "scripts/chrome-extension-scripts/background.js"]

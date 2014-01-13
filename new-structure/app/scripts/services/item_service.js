@@ -1,9 +1,9 @@
 angular.module('iWillRil').factory('ItemService', function($http, AuthService){
   var CONSUMER_KEY = AuthService.consumer_key;
   var itemService = {};
-  itemService.items = []; 
+  itemService.items = [];
   itemService.getItems = function(){
-    return itemService.items; 
+    return itemService.items;
   }
 
   itemService.refresh = function(){
@@ -18,7 +18,7 @@ angular.module('iWillRil').factory('ItemService', function($http, AuthService){
         parseToList(data.list);
       })
       .error(function(data, status){
-      
+
       })
   }
 
@@ -31,7 +31,7 @@ angular.module('iWillRil').factory('ItemService', function($http, AuthService){
     }
     itemService.items = list;
   }
-  
+
 
   return itemService;
 });
