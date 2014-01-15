@@ -2,8 +2,12 @@ angular.module('iWillRil').factory('ItemService', function($http, AuthService){
   var CONSUMER_KEY = AuthService.consumer_key;
   var itemService = {};
   itemService.items = [];
-  itemService.getItems = function(){
-    return itemService.items;
+
+
+  itemService.getItems = function(callback){
+    chrome.storage.local.get('itemList', function(data){
+      callback(data.itemList);
+    })
   }
 
   itemService.refresh = function(){
@@ -30,8 +34,8 @@ angular.module('iWillRil').factory('ItemService', function($http, AuthService){
       list.push(item);
     }
     itemService.items = list;
+    chrome.storage.local.set({itemList: list});
   }
-
 
   return itemService;
 });

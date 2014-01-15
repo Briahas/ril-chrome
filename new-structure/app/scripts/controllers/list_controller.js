@@ -6,11 +6,20 @@ angular.module('iWillRil')
       console.log('Testing');
     };
 
+    $scope.items = [];
+
     $scope.refresh = function(){
       ItemService.refresh();
     }
 
     $scope.getItems = function(){
-      return ItemService.getItems();
+      ItemService.getItems(function(items){
+        $scope.items = items;
+        if(!$scope.$$phase){
+          $scope.$digest();
+        }
+      });
     }
+
+    $scope.getItems();
   });
