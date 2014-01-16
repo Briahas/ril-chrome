@@ -1,6 +1,6 @@
    <header style="position: relative;">
      <input id='search-input' type='text' size=25>
-     <span id="add-button" class="icon-header icon icon-bookmark" title="Add"></span>
+     <span id="add-button" ng-click='addUrl()' class="icon-header icon icon-bookmark" title="Add">AddButton</span>
      <span ng-click='refresh()' id="sync-button" class="icon-header icon icon-refresh" title="Sync"></span>
      <span id="options-button" class='icon-header icon icon-wrench' title="Settings"></span>
      <div id="sort-select-div">
@@ -18,7 +18,7 @@
             <span><img src="{{item.getFaviconUrl()}}" /></span>
           </td>
           <td>
-            <a href="{{item.resolved_url}}">{{item.resolved_title}}</a>
+            <a href="{{item.resolved_url}}">{{item.resolved_title || item.title}}</a>
           </td>
           <td>
             Mark As Read  

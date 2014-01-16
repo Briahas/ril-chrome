@@ -21,5 +21,15 @@ angular.module('iWillRil')
       });
     }
 
+    $scope.addUrl = function(){
+      chrome.tabs.getSelected(null, function(tab){
+        var url = tab.url;
+        var title = tab.title;
+        ItemService.add(url, title, function(error, data){
+          $scope.items.push(data); 
+        })
+      })
+    }
+
     $scope.getItems();
   });
