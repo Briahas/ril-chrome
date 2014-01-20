@@ -15,10 +15,10 @@
       <tbody>
         <tr ng-repeat="item in items">
           <td>
-            <span><img src="{{item.getFaviconUrl()}}" /></span>
+            <span><img src="{{item.getFavicon()}}" /></span>
           </td>
           <td>
-            <a href="{{item.resolved_url}}">{{item.resolved_title || item.title}}</a>
+            <a href="{{item.getUrl()}}">{{item.getTitle()}}</a>
           </td>
           <td>
             Mark As Read  

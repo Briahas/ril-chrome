@@ -26,7 +26,7 @@ angular.module('iWillRil')
         var url = tab.url;
         var title = tab.title;
         ItemService.add(url, title, function(error, data){
-          $scope.items.push(data); 
+          $scope.items.push(data);
         })
       })
     }

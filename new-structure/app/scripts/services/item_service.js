@@ -3,18 +3,21 @@ angular.module('iWillRil').factory('ItemService', function($http, AuthService){
   var itemService = {};
   itemService.items = [];
 
-
   itemService.getItems = function(callback){
     chrome.storage.local.get('itemList', function(data){
-      callback(data.itemList);
-    })
+      var list = []
+      for(var i = 0; i < data.itemList.length; i++){
+        var item = new Item(data.itemList[i]);
+        list.push(item);
+      }
+      callback(list);
+    });
   }
 
   itemService.addItem = function(item){
     chrome.storage.local.get('itemList', function(data){
       data.itemList.push(item);
     })
-    
   }
 
   itemService.refresh = function(){
@@ -44,20 +47,20 @@ angular.module('iWillRil').factory('ItemService', function($http, AuthService){
 
     $http.post(url, params)
       .success(function(data, status){
-        itemService.addItem(data.item);
-        callback(null, data.item);
+      var item = new Item(data.item);
+        itemService.addItem(item);
+        callback(null, item);
       })
       .error(function(data, status){
         callback("Error");
       })
   }
 
-
   function parseToList(pocketListResponse){
     var list = [];
     for(key in pocketListResponse){
-      var item = pocketListResponse[key];
-      list.push(item);
+      var itemApi = pocketListResponse[key];
+      list.push(itemApi);
     }
     itemService.items = list;
     chrome.storage.local.set({itemList: list});
