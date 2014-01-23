@@ -4,16 +4,16 @@
      <span ng-click='refresh()' id="sync-button" class="icon-header icon icon-refresh" title="Sync"></span>
      <span id="options-button" class='icon-header icon icon-wrench' title="Settings"></span>
      <div id="sort-select-div">
-      <select id="sort-select" onchange="order-by()">
-        <option value="old">Oldest</option>
-        <option value="new">Newest</option>
+      <select id="sort-select" ng-model='orderBy' ng-change="updateOrderBy()">
+        <option value="oldest">Oldest</option>
+        <option value="newest">Newest</option>
       </select>
     </div>
   </header>
   <div id="list">
     <table cellpadding="5" width='95%'>
       <tbody>
-        <tr ng-repeat="item in items">
+        <tr ng-repeat="item in items | orderBy: orderItems">
           <td>
             <span><img src="{{item.getFavicon()}}" /></span>
           </td>

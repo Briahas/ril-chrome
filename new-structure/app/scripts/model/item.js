@@ -31,6 +31,10 @@ function Item(itemApi){
     var url = self.getUrl();
     return "http://g.etfv.co/"+ encodeURIComponent(url);
   };
+
+  self.getTimeAdded = function(){
+    return itemApi.time_added;
+  }
 }
 
 

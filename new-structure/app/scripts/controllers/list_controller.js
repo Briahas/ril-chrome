@@ -1,15 +1,23 @@
 'use strict';
 
 angular.module('iWillRil')
-  .controller('ListController', function($scope, ItemService){
+  .controller('ListController', function($scope, ItemService, SettingsService){
     $scope.test = function(){
       console.log('Testing');
     };
 
     $scope.items = [];
+    $scope.orderBy = SettingsService.orderBy;
 
     $scope.refresh = function(){
       ItemService.refresh();
+    }
+
+    $scope.orderItems = function(item){
+      if(SettingsService.orderBy == 'oldest')
+        return item.getTimeAdded();
+      else
+        return - item.getTimeAdded();
     }
 
     $scope.getItems = function(){
@@ -19,6 +27,10 @@ angular.module('iWillRil')
           $scope.$digest();
         }
       });
+    }
+
+    $scope.updateOrderBy = function(){
+      SettingsService.updateOrderBy($scope.orderBy);
     }
 
     $scope.addUrl = function(){
