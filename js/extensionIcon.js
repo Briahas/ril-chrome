@@ -15,7 +15,7 @@ ExtensionIcon.setUncountLabel = function(size){
   chrome.browserAction.setBadgeText(txt);
 }
 
-ExtensionIcon.loaded = function(){    
+ExtensionIcon.loaded = function(){
     ExtensionIcon.set('images/bookmark.png');
 }
 

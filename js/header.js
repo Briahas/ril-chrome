@@ -22,7 +22,7 @@ Header.add = function(){
   chrome.tabs.getSelected(null, function(tab) {
     var url = tab.url;
     var title = tab.title;
-    Request.add(refreshList, url, title); 
+    Request.add(refreshList, url, title);
   });
 }
 
