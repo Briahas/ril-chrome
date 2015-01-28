@@ -12,12 +12,16 @@ function init(){
 
 
 function buildPage(){
-  if(!localStorage["lastResponse"])
-    refreshList();
-  else
-    updatePage();
-}
+  ItemRepository.getItems(function(error, items){
+    if(error){
+      if(error.code === -2)//Autenticação
+        Auth.authenticate();
+    }else{
+      renderExtension(items);
+    }
+  });
 
+}
 
 function showLoadScreen(){
   if(document.getElementById("list_div"))
@@ -40,19 +44,17 @@ function getCallback(resp){
   }
   else{
     localStorage['lastResponse'] = resp.response;
-    updatePage();
+    renderExtension(RilList.getItemsArray());
   }
 }
 
-function updatePage(){
-  var list = RilList.getItemsArray();
-
+function renderExtension(items){
   if($("#table_list"))
   {
     hideLoadScreen();
     ExtensionIcon.loaded();
-    Table.render(list);
+    Table.render(items);
     Header.refresh();
   }
-  ExtensionIcon.setUncountLabel(list.length);
+  ExtensionIcon.setUncountLabel(items.length);
 }

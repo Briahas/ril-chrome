@@ -15,7 +15,7 @@
     "contextMenus"
   ],
    "background": {
-    "scripts": ["js/request.js", "js/rilList.js", "js/auth.js", "js/extensionIcon.js", "js/background.js"]
+    "scripts": ["js/request.js", "js/rilList.js", "js/auth.js", "js/extensionIcon.js", "js/background.js", "js/repository/item_repository.js"]
   },
     "manifest_version": 2,
 
