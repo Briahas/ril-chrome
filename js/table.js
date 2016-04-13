@@ -32,18 +32,28 @@ Table.tryToMarkAsRead = function(){
 
 Table.getItemHtml = function(item){
   var title = Table.getItemTitle(item);
-  var item =  "<tr class=\"table_row\" id=\"line_index_"+item.index+"\" >"+
-    "<td class=\"no_border favicon\">"+
-    "<span><img src=\""+Table.getFaviconUrl(item)+"\" id=\"favicon_index_"+item.index+"\" class=\"favicon_img\"></img></span>"+
-    "</td>"+
-    "<td nowrap='nowrap' class=\"item_link_td\" item_id=\""+item.item_id+"\">"+
-    "<span id=\"title_span_index_"+item.index+"\">"+
-    "<a href=\""+Table.getItemUrl(item)+"\" target=\"_blank\" title=\""+title+"\">"+title+"</a>"+
-    "</span>"+
-    "</td>"+
-    "<td class=\"no_border table_img_mark_as_read icon-ok\" id=\"list_img_index_"+item.index+"\" item_id=\""+item.item_id+"\" index=\""+item.index+"\" title=\"Mark as Read\">"
+  var deleteButton = "";
+  var maxWidth = '277px';
+  debugger
+  if(localStorage['addDeleteButton'] === 'true'){
+    deleteButton = "<td class=\"no_border table_img_delete icon  icon-remove\" id=\"list_delete_img_index_"+item.index+"\" item_id=\""+item.item_id+"\" index=\""+item.index+"\" title=\"Delete from Pocket\"></td>";
+    maxWidth = '257px';
+  }
+
+  var item =  "<tr class=\"table_row\" id=\"line_index_"+item.index+"\" >" +
+    "<td class=\"no_border favicon\">" +
+    "<span><img src=\""+Table.getFaviconUrl(item)+"\" id=\"favicon_index_"+item.index+"\" class=\"favicon_img\"></img></span>" +
     "</td>" +
+    "<td nowrap='nowrap' style=\"max-width: " + maxWidth  + ";\" class=\"item_link_td\" item_id=\""+item.item_id+"\">" +
+    "<span id=\"title_span_index_"+item.index+"\">" +
+    "<a href=\""+Table.getItemUrl(item)+"\" target=\"_blank\" title=\""+title+"\">"+title+"</a>" +
+    "</span>" +
+    "</td>" +
+    "<td class=\"no_border table_img_mark_as_read icon-ok\" id=\"list_img_index_"+item.index+"\" item_id=\""+item.item_id+"\" index=\""+item.index+"\" title=\"Mark as Read\">" +
+    "</td>" +
+      deleteButton +
     "</tr>";
+
     return item;
 }
 

@@ -165,7 +165,6 @@ table{
 }
 
 .item_link_td{
- max-width: 277px;
  text-overflow: ellipsis;
  overflow: hidden;
 }
