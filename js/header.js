@@ -1,42 +1,49 @@
-function Header(){}
-
-Header.initFunctions = function(){
-  $("#add_button").click(Header.add);
-  $("#option_footer").click(Header.openOptions);
-  $("#sync_button").click(Header.refreshList);
-  $("#order_select").change(Header.orderBy);
+function Header(table){
+  var table = table;
+  this.listeners = {};
 }
 
-Header.openOptions = function(){
+Header.prototype.on = function(eventName, callback){
+  this.listeners[eventName] = this.listeners[eventName] || [];
+  this.listeners[eventName].push(callback);
+};
+
+Header.prototype.initFunctions = function(){
+  $("#add_button").click(this.add.bind(this));
+  $("#option_footer").click(this.openOptions.bind(this));
+  $("#sync_button").click(this.refreshList.bind(this));
+  $("#order_select").change(this.orderBy.bind(this));
+}
+
+Header.prototype.openOptions = function(){
   var optionsUrl = chrome.extension.getURL('html/options.html');
   chrome.tabs.create({url: optionsUrl});
 }
 
-Header.refreshList = function(){
-  showLoadScreen();
-  refreshList();
-}
+Header.prototype.refreshList = function(){
+  this.listeners['refreshList'].forEach(function(callback){
+    callback();
+  });
+};
 
-Header.add = function(){
+Header.prototype.add = function(){
   ExtensionIcon.set('../images/loader_table.gif');
+  var that = this;
   chrome.tabs.getSelected(null, function(tab) {
-    var url = tab.url;
-    var title = tab.title;
-    Request.add(refreshList, url, title); 
+    that.listeners['addItem'].forEach(function(callback){
+      callback(tab);
+    });
+  });
+};
+
+Header.prototype.orderBy = function(){
+  var order = document.getElementById("order_select").value;
+  this.listeners['sort'].forEach(function(callback){
+    callback(order);
   });
 }
 
-Header.updateOrderBy = function(){
+Header.prototype.refresh = function(){
   $("#order_select").val(localStorage['iwillril_order_by'])
-}
-
-Header.orderBy = function(){
-  var order = document.getElementById("order_select").value;
-  localStorage['iwillril_order_by'] = order;
-  buildPage();
-}
-
-Header.refresh = function(){
-  Header.updateOrderBy();
   $('input#iwillril_search').quicksearch('table#iwillril_table tbody tr');
 }

@@ -6,7 +6,9 @@ ExtensionIcon.set = function(icon){
   chrome.browserAction.setIcon(object);
 }
 
-ExtensionIcon.setUncountLabel = function(size){
+ExtensionIcon.updateNumber = function(){
+  var list = RilList.getItemsArray();
+  var size = list.length;
   var txt = new Object();
   if(localStorage['removeUncountLabel'] == 'true')
     txt.text = '';
@@ -15,11 +17,10 @@ ExtensionIcon.setUncountLabel = function(size){
   chrome.browserAction.setBadgeText(txt);
 }
 
-ExtensionIcon.loaded = function(){    
+ExtensionIcon.loaded = function(){
     ExtensionIcon.set('images/bookmark.png');
 }
 
 ExtensionIcon.loading = function(){
   ExtensionIcon.set('images/loader_table.gif');
 }
-

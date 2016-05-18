@@ -37,7 +37,7 @@ Background.sync = function(){
 
 Background.manageSelectedTab = function(tabid, obj){
   chrome.contextMenus.removeAll();
-  if(localStorage['remove_context_menu_iwillril'] &&  localStorage['remove_context_menu_iwillril'] == 'true')
+  if(localStorage['remove_context_menu_iwillril'] && localStorage['remove_context_menu_iwillril'] == 'true')
     return;
   chrome.tabs.get(tabid, function (tab){
     var list = RilList.getItemsArray();
@@ -79,7 +79,7 @@ Background.iWillRil = function(info, tab){
 }
 
 Background.updateUncountLabel = function(){
-    ExtensionIcon.setUncountLabel(RilList.getItemsArray().length);
+    ExtensionIcon.updateNumber();
 }
 
 Background.updateContent = function(){
@@ -89,7 +89,7 @@ Background.updateContent = function(){
       localStorage['lastResponse'] = '';
     else{
       localStorage['lastResponse'] = resp.response;
-      ExtensionIcon.setUncountLabel(RilList.getItemsArray().length);
+      ExtensionIcon.updateNumber();
     }
   }, 0);
 }
