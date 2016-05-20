@@ -27,7 +27,6 @@ Header.prototype.refreshList = function(){
 };
 
 Header.prototype.add = function(){
-  ExtensionIcon.set('../images/loader_table.gif');
   var that = this;
   chrome.tabs.getSelected(null, function(tab) {
     that.listeners['addItem'].forEach(function(callback){

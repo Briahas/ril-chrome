@@ -1,8 +1,14 @@
-function Table(){}
+function Table(){
+  this.listeners = {};
+}
 
-Table.prototype.render = function(){
+Table.prototype.on = function(eventName, callback){
+  this.listeners[eventName] = this.listeners[eventName] || [];
+  this.listeners[eventName].push(callback);
+};
+
+Table.prototype.render = function(list){
   var list_content = "";
-  var list = RilList.getItemsArray();
   for(var i = 0; i < list.length; i++)
   {
     var item = list[i];
@@ -16,24 +22,20 @@ Table.prototype.render = function(){
   $(".item_link_td").click(this.tryToMarkAsRead.bind(this));
 }
 
-Table.prototype.markAsRead = function(elem){
-  var item_id = $(elem).attr('item_id');
-  var id = $(elem).attr('index');
+Table.prototype.markAsRead = function(ev){
+  var item_id = $(ev.target).attr('item_id');
+  var id = $(ev.target).attr('index');
   this.changeElemStyle(id);
-  if(localStorage['deleteItensOption'] === 'true'){
-    Request.delete(refreshList, parseInt(item_id));
-
-  }else{
-    Request.archieve(refreshList, parseInt(item_id));
-  }
+  this.listeners['markAsRead'].forEach(function(callback){
+    callback(parseInt(item_id));
+  });
 }
 
 Table.prototype.tryToMarkAsRead = function(elem){
-  if(localStorage["mark_auto_iwillril"] == "true"){
-    var bg = chrome.extension.getBackgroundPage();
-    var item_id = $(elem).attr('item_id');
-    Request.archieve(bg.Background.updateContent, parseInt(item_id));
-  }
+  var item_id = $(ev.target).attr('item_id');
+  this.listeners['autoMarkAsRead'].forEach(function(callback){
+    callback(parseInt(item_id));
+  });
 }
 
 Table.prototype.getItemHtml = function(item){

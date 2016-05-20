@@ -1,6 +1,7 @@
 function ExtensionIcon(){}
 
 ExtensionIcon.set = function(icon){
+  console.log('SET ICON');
   var object = new Object();
   object.path = chrome.extension.getURL(icon);
   chrome.browserAction.setIcon(object);

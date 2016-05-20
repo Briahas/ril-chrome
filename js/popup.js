@@ -8,18 +8,48 @@
   function Popup(){
     this.table = new Table();
     this.header = new Header(this.table);
+    this._addHeaderEvents();
+    this._addTableEvents();
+  }
+
+  Popup.prototype._addHeaderEvents = function(){
     var that = this;
     this.header.on('addItem', function(data){
-
-      Request.add(that.refreshList.bind(that), data.url, data.title);
-    });
-    this.header.on('refreshList', function(data){
       that.showLoadScreen();
-      that.refreshList();
+      chrome.runtime.sendMessage({type: 'add', payload: data}, function(response) {
+        that.refreshList(response);
+      });
+    });
+    this.header.on('refreshList', function(){
+      that.showLoadScreen();
+      chrome.runtime.sendMessage({type: 'refresh'}, function(response) {
+        that.refreshList(response);
+      });
     });
     this.header.on('sort', function(data){
       localStorage['iwillril_order_by'] = data;
       that.buildPage();
+    });
+  }
+
+  Popup.prototype._addTableEvents = function(){
+    var that = this;
+    this.table.on('markAsRead', function(itemId){
+      var action = 'archive';
+      if(localStorage['deleteItensOption'] === 'true')
+        action = 'delete';
+      chrome.runtime.sendMessage({type: action, payload: itemId}, function(response) {
+        that.refreshList(response);
+      });
+    });
+
+    this.table.on('autoMarkAsRead', function(itemId){
+      if(localStorage["mark_auto_iwillril"] == "true"){
+        var action = 'archive';
+        chrome.runtime.sendMessage({type: action, payload: itemId}, function(response) {
+          that.refreshList(response);
+        });
+      }
     });
   }
 
@@ -35,8 +65,13 @@
   }
 
   Popup.prototype.buildPage = function(){
-    if(!localStorage["lastResponse"])
-      this.refreshList();
+    var that = this;
+    if(!localStorage["lastResponse"]){
+      chrome.runtime.sendMessage({type: 'refresh'}, function(response) {
+        that.showLoadScreen();
+        that.refreshList(response);
+      });
+    }
     else
       this.updatePage();
   }
@@ -51,26 +86,17 @@
       document.getElementById("list_div").style.opacity = 1;
   }
 
-  Popup.prototype.refreshList = function(){
+  Popup.prototype.refreshList = function(response){
     var that = this;
-    ExtensionIcon.loading();
-    function getCallback(resp){
-      ExtensionIcon.loaded();
-      if(resp.status == 403 || resp.status == 401){
-          localStorage['lastResponse'] = '';
-          Auth.authenticate();
-      }
-      else{
-        localStorage['lastResponse'] = resp.response;
-        that.updatePage();
-      }
+    if(response.success){
+      that.updatePage();
+    }else{
+      Auth.authenticate();
     }
-    Request.get(getCallback, 0);
   }
 
   Popup.prototype.updatePage = function(){
     this.hideLoadScreen();
-    ExtensionIcon.updateNumber();
     this.header.refresh();
-    this.table.render();
+    this.table.render(RilList.getItemsArray());
   }
