@@ -56,12 +56,9 @@
   Popup.prototype.init = function(){
     var that = this;
     that.header.initFunctions();
-    if(Auth.isAuthenticate()){
-      window.setTimeout(function(){that.buildPage();}, 1);
-    }
-    else{
-      Auth.authenticate();
-    }
+    chrome.runtime.sendMessage({type: 'getList'}, function(response) {
+      that.refreshList(response);
+    });
   }
 
   Popup.prototype.buildPage = function(){
@@ -90,8 +87,6 @@
     var that = this;
     if(response.success){
       that.updatePage();
-    }else{
-      Auth.authenticate();
     }
   }
 
