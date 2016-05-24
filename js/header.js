@@ -1,5 +1,4 @@
-function Header(table){
-  var table = table;
+function Header(){
   this.listeners = {};
 }
 

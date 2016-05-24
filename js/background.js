@@ -18,6 +18,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     case 'getList':
       Background.getList(sendResponse);
       break;
+    case 'sortList':
+      localStorage['iwillril_order_by'] = request.payload;
+      sendResponse({success: true, payload: RilList.getItemsArray()});
+      break;
     default:
 
   }
@@ -59,7 +63,8 @@ Background.sync = function(){
 Background.getList = function(callback){
   if(Auth.isAuthenticate()){
     if(localStorage['lastResponse']) {
-      callback({success: 200, payload: localStorage['lastResponse']});
+      callback({success: 200, payload: RilList.getItemsArray()});
+      ExtensionIcon.loaded();
     }
     else {
       Background.updateContent(callback);
@@ -129,7 +134,7 @@ Background.updateContent = function(callback){
     ExtensionIcon.loaded();
     ExtensionIcon.updateNumber();
     if(callback)
-      callback({success: resp.status === 200, payload: resp.response});
+      callback({success: resp.status === 200, payload: RilList.getItemsArray()});
   }, 0);
 }
 

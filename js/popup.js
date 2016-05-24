@@ -5,9 +5,11 @@
     popup.init();
   }
 
-  function Popup(){
+  function Popup(args){
+    args = args || {};
+    this.eventNotifier = args.eventNotifier || chrome.runtime.sendMessage;
     this.table = new Table();
-    this.header = new Header(this.table);
+    this.header = new Header();
     this._addHeaderEvents();
     this._addTableEvents();
   }
@@ -16,21 +18,22 @@
     var that = this;
     this.header.on('addItem', function(data){
       that.showLoadScreen();
-      chrome.runtime.sendMessage({type: 'add', payload: data}, function(response) {
-        that.refreshList(response);
+      that.eventNotifier({type: 'add', payload: data}, function(response) {
+        that.updatePage(response);
       });
     });
     this.header.on('refreshList', function(){
       that.showLoadScreen();
-      chrome.runtime.sendMessage({type: 'refresh'}, function(response) {
-        that.refreshList(response);
+      that.eventNotifier({type: 'refresh'}, function(response) {
+        that.updatePage(response);
       });
     });
     this.header.on('sort', function(data){
-      localStorage['iwillril_order_by'] = data;
-      that.buildPage();
+      that.eventNotifier({type: 'sortList', payload: data}, function(response) {
+        that.updatePage(response);
+      });
     });
-  }
+  };
 
   Popup.prototype._addTableEvents = function(){
     var that = this;
@@ -38,60 +41,43 @@
       var action = 'archive';
       if(localStorage['deleteItensOption'] === 'true')
         action = 'delete';
-      chrome.runtime.sendMessage({type: action, payload: itemId}, function(response) {
-        that.refreshList(response);
+      that.eventNotifier({type: action, payload: itemId}, function(response) {
+        that.updatePage(response);
       });
     });
 
     this.table.on('autoMarkAsRead', function(itemId){
       if(localStorage["mark_auto_iwillril"] == "true"){
         var action = 'archive';
-        chrome.runtime.sendMessage({type: action, payload: itemId}, function(response) {
-          that.refreshList(response);
+        that.eventNotifier({type: action, payload: itemId}, function(response) {
+          that.updatePage(response);
         });
       }
     });
-  }
+  };
 
   Popup.prototype.init = function(){
     var that = this;
     that.header.initFunctions();
-    chrome.runtime.sendMessage({type: 'getList'}, function(response) {
-      that.refreshList(response);
+    that.eventNotifier({type: 'getList'}, function(response) {
+      that.updatePage(response);
     });
-  }
-
-  Popup.prototype.buildPage = function(){
-    var that = this;
-    if(!localStorage["lastResponse"]){
-      chrome.runtime.sendMessage({type: 'refresh'}, function(response) {
-        that.showLoadScreen();
-        that.refreshList(response);
-      });
-    }
-    else
-      this.updatePage();
-  }
+  };
 
   Popup.prototype.showLoadScreen = function(){
     if(document.getElementById("list_div"))
       document.getElementById("list_div").style.opacity = 0.4;
-  }
+  };
 
   Popup.prototype.hideLoadScreen = function(){
     if(document.getElementById("list_div"))
       document.getElementById("list_div").style.opacity = 1;
-  }
+  };
 
-  Popup.prototype.refreshList = function(response){
-    var that = this;
+  Popup.prototype.updatePage = function(response){
     if(response.success){
-      that.updatePage();
+      this.hideLoadScreen();
+      this.header.refresh();
+      this.table.render(response.payload);
     }
-  }
-
-  Popup.prototype.updatePage = function(){
-    this.hideLoadScreen();
-    this.header.refresh();
-    this.table.render(RilList.getItemsArray());
-  }
+  };

@@ -31,7 +31,7 @@ Table.prototype.markAsRead = function(ev){
   });
 }
 
-Table.prototype.tryToMarkAsRead = function(elem){
+Table.prototype.tryToMarkAsRead = function(ev){
   var item_id = $(ev.target).attr('item_id');
   this.listeners['autoMarkAsRead'].forEach(function(callback){
     callback(parseInt(item_id));
