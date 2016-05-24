@@ -1,3 +1,7 @@
+import Constants from './constants.js';
+import ExtensionIcon from './extensionIcon';
+import RilList from './rilList.js';
+import Auth from './auth.js';
 
 function Background(){}
 
@@ -8,8 +12,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       Request.archieve(Background.updateContent.bind(this, sendResponse), request.payload);
       break;
     case 'add':
-      var url = request.payload.url;
-      var title = request.payload.title;
+      const url = request.payload.url;
+      const title = request.payload.title;
       Request.add(Background.updateContent.bind(this, sendResponse), url, title);
       break;
     case 'refresh':
@@ -41,8 +45,8 @@ Background.init = function(){
 
 Background.sync = function(){
   Background.updateContent();
-  var interval = localStorage['rilUpdateInterval'];
-
+  const interval = localStorage['rilUpdateInterval'];
+  let timeout = 1000 * 60 * 60 * 2;
   switch(interval){
     case '0':
       timeout = 1000 * 60 * 30;
@@ -53,8 +57,6 @@ Background.sync = function(){
     case '2':
       timeout = 1000 * 60 * 60 * 2;
       break;
-    default:
-      timeout = 1000 * 60 * 60 * 2;
   }
 
   window.setTimeout(Background.sync, timeout);
@@ -80,10 +82,10 @@ Background.manageSelectedTab = function(tabid, obj){
   if(localStorage['remove_context_menu_iwillril'] && localStorage['remove_context_menu_iwillril'] == 'true')
     return;
   chrome.tabs.get(tabid, function (tab){
-    var list = RilList.getItemsArray();
+    const list = RilList.getItemsArray();
 
-    for(var i = 0; i < list.length; i++){
-      var obj = list[i];
+    for(let i = 0; i < list.length; i++){
+      const obj = list[i];
       if(tab.url == obj.resolved_url || tab.url == obj.given_url){
         chrome.contextMenus.create({"title": "Mark as Read ", "onclick": Background.markAsRead,"contexts":["page"]});
         return;
@@ -96,15 +98,15 @@ Background.manageSelectedTab = function(tabid, obj){
 Background.markAsRead = function(info, tab){
   ExtensionIcon.loading();
   chrome.tabs.getSelected(null, function(tab) {
-    var url = tab.url;
-    var itemId = RilList.getItemId(url);
+    const url = tab.url;
+    const itemId = RilList.getItemId(url);
     Request.archieve(Background.updateContent, itemId);
   });
 }
 
 Background.iWillRil = function(info, tab){
   ExtensionIcon.loading();
-  var title, url;
+  let title, url;
 
   if(info.linkUrl){
     url = info.linkUrl;
@@ -116,11 +118,11 @@ Background.iWillRil = function(info, tab){
 
   if(url)
     Request.add(Background.updateContent, url, title);
-}
+};
 
 Background.updateUncountLabel = function(){
   ExtensionIcon.updateNumber();
-}
+};
 
 Background.updateContent = function(callback){
   Request.get(function(resp){
@@ -136,28 +138,28 @@ Background.updateContent = function(callback){
     if(callback)
       callback({success: resp.status === 200, payload: RilList.getItemsArray()});
   }, 0);
-}
+};
 
 Background.onExtensionRequest = function(request, sender, sendResponse){
   switch(request.name){
     case 'keyShortCut':
       Background.keyboardShortcutManager(request);
   }
-}
+};
 
 Background.keyboardShortcutManager = function(request){
   if(!localStorage['rilBtnShortCut'])
     return;
 
-  var shortCut = localStorage['rilBtnShortCut'];
-  var charKey = String.fromCharCode(request.keyCode);
+  const shortCut = localStorage['rilBtnShortCut'];
+  const charKey = String.fromCharCode(request.keyCode);
 
   if(shortCut.toLowerCase() == charKey.toLowerCase())
     chrome.tabs.getSelected(null, function(tab){
       if(RilList.getItemId(tab.url))
-        Background.markAsRead({}, tab)
+        Background.markAsRead({}, tab);
       else
         Background.iWillRil({}, tab);
-    })
-}
+    });
+};
 Background.init();

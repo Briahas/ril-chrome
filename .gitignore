@@ -2,6 +2,7 @@
 *json~
 *js~
 *.swp
+/node_modules/
 background.html~
 popup.html~
 options.html~
