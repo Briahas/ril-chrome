@@ -44,7 +44,7 @@ Header.prototype.orderBy = function(){
 
 Header.prototype.refresh = function(){
   document.querySelector("#order_select").value = localStorage['iwillril_order_by'];
-  document.querySelector('#iwillril_search').addEventListener('keydown', (ev) => {
+  document.querySelector('#iwillril_search').addEventListener('keyup', (ev) => {
     this.listeners['filter'].forEach( (callback) => callback(ev.target.value) );
   });
 };
