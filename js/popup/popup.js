@@ -13,6 +13,7 @@ function Popup(args){
   this.header = new Header();
   this._addHeaderEvents();
   this._addTableEvents();
+  this._filtering = null;
 }
 
 Popup.prototype._addHeaderEvents = function(){
@@ -33,6 +34,15 @@ Popup.prototype._addHeaderEvents = function(){
     that.eventNotifier({type: 'sortList', payload: data}, function(response) {
       that.updatePage(response);
     });
+  });
+  this.header.on('filter', function(data){
+    function filter(){
+      that.eventNotifier({type: 'filter', payload: data}, function(response) {
+        that.updatePage(response);
+      });
+    }
+    clearTimeout(that._filtering);
+    that._filtering = setTimeout(filter, 100);
   });
 };
 

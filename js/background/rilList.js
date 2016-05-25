@@ -18,15 +18,21 @@ RilList._sortNew = function(a, b){
   return 0;
 }
 
-RilList.getItemsArray = function(){
-  var lastResponse = localStorage['lastResponse'];
+RilList.getItemsArray = function(filter){
+  const lastResponse = localStorage['lastResponse'];
   if(!lastResponse)
     return [];
 
-  var obj = JSON.parse(lastResponse);
-  var items = [];
-  for(var key in obj.list){
+  const obj = JSON.parse(lastResponse);
+  let items = [];
+  for(const key in obj.list){
     items.push(obj.list[key]);
+  }
+
+  if(filter){
+    items = items.filter((i) => {
+      return (i.resolved_title.includes(filter));
+    });
   }
 
   var order = localStorage['iwillril_order_by']

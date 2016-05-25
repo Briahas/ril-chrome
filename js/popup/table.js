@@ -17,26 +17,34 @@ Table.prototype.render = function(list){
     list_content += html;
   }
 
-  $("#table_list").html(list_content);
-  $(".table_img_mark_as_read").click(this.markAsRead.bind(this));
-  $(".item_link_td").click(this.tryToMarkAsRead.bind(this));
-}
+  document.querySelector("#table_list").innerHTML = list_content;
+  const markAsReadIcons = document.querySelectorAll(".table_img_mark_as_read");
+  for(let i = 0; i< markAsReadIcons.length; i++){
+    const icon = markAsReadIcons[i];
+    icon.addEventListener('click', this.markAsRead.bind(this));
+  }
+  const itemLinkTds = document.querySelectorAll(".item_link_td");
+  for(let i = 0; i< itemLinkTds.length; i++){
+    const item = itemLinkTds[i];
+    item.addEventListener('click', this.tryToMarkAsRead.bind(this));
+  }
+};
 
 Table.prototype.markAsRead = function(ev){
-  const item_id = $(ev.target).attr('item_id');
-  const id = $(ev.target).attr('index');
+  const item_id = ev.target.getAttribute('item_id');
+  const id = ev.target.getAttribute('index');
   this.changeElemStyle(id);
   this.listeners['markAsRead'].forEach(function(callback){
     callback(parseInt(item_id));
   });
-}
+};
 
 Table.prototype.tryToMarkAsRead = function(ev){
-  const item_id = $(ev.target).attr('item_id');
+  const item_id = ev.target.getAttribute('item_id');
   this.listeners['autoMarkAsRead'].forEach(function(callback){
     callback(parseInt(item_id));
   });
-}
+};
 
 Table.prototype.getItemHtml = function(item){
   const title = this.getItemTitle(item);
@@ -64,10 +72,8 @@ Table.prototype.getItemHtml = function(item){
 
 Table.prototype.getFaviconUrl = function(item){
   const url = this.getItemUrl(item);
-  //return "http://g.etfv.co/"+ encodeURIComponent(url);
-  // return Table.getDomain(url)+"/favicon.ico";
-   return "http://www.google.com/s2/favicons?domain_url="+ encodeURIComponent(url);
-}
+  return "http://www.google.com/s2/favicons?domain_url="+ encodeURIComponent(url);
+};
 
 Table.prototype.getItemTitle = function(item){
   let title = '';
@@ -79,13 +85,13 @@ Table.prototype.getItemTitle = function(item){
     title = this.getItemUrl(item);
 
   return title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
+};
 
 Table.prototype.getItemUrl = function(item){
   if(item.resolved_url)
     return item.resolved_url;
   return item.given_url;
-}
+};
 
 Table.prototype.getDomain = function(url){
   if(!url)
@@ -97,7 +103,7 @@ Table.prototype.getDomain = function(url){
   if(url.length > 30)
     url = url.substr(0, 30) + "...";
   return url;
-}
+};
 
 Table.prototype.changeElemStyle = function(id){
   if(document.getElementById("list_img_index_"+id))
@@ -107,6 +113,6 @@ Table.prototype.changeElemStyle = function(id){
     elem.style.opacity = 0.3;
     elem.style.textDecoration = "line-through";
   }
-}
+};
 
 export default Table;

@@ -32,6 +32,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       sendResponse({success: true, payload: RilList.getItemsArray()});
       break;
     }
+    case Constants.ACTION_FILTER:{
+      sendResponse({success: true, payload: RilList.getItemsArray(request.payload)});
+      break;
+    }
   }
   return true;
 });
