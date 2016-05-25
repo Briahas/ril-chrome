@@ -1,33 +1,37 @@
-import Constants from './constants.js';
+import Constants from './../constants.js';
 import ExtensionIcon from './extensionIcon';
 import RilList from './rilList.js';
 import Auth from './auth.js';
+import Request from './request.js';
 
 function Background(){}
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   ExtensionIcon.loading();
   switch (request.type) {
-    case Constants.ACTION_ARCHIVE:
+    case Constants.ACTION_ARCHIVE:{
       Request.archieve(Background.updateContent.bind(this, sendResponse), request.payload);
       break;
-    case 'add':
+    }
+    case Constants.ACTION_ADD:{
       const url = request.payload.url;
       const title = request.payload.title;
       Request.add(Background.updateContent.bind(this, sendResponse), url, title);
       break;
-    case 'refresh':
+    }
+    case Constants.ACTION_REFRESH:{
       Background.updateContent(sendResponse);
       break;
-    case 'getList':
+    }
+    case Constants.ACTION_GETLIST:{
       Background.getList(sendResponse);
       break;
-    case 'sortList':
+    }
+    case Constants.ACTION_SORTLIST:{
       localStorage['iwillril_order_by'] = request.payload;
       sendResponse({success: true, payload: RilList.getItemsArray()});
       break;
-    default:
-
+    }
   }
   return true;
 });
@@ -93,7 +97,7 @@ Background.manageSelectedTab = function(tabid, obj){
     }
     chrome.contextMenus.create({"title": "I'll Read it Later ", "onclick": Background.iWillRil,"contexts":["page", "link"]});
   });
-}
+};
 
 Background.markAsRead = function(info, tab){
   ExtensionIcon.loading();
@@ -102,7 +106,7 @@ Background.markAsRead = function(info, tab){
     const itemId = RilList.getItemId(url);
     Request.archieve(Background.updateContent, itemId);
   });
-}
+};
 
 Background.iWillRil = function(info, tab){
   ExtensionIcon.loading();

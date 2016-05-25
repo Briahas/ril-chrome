@@ -8,12 +8,12 @@ Table.prototype.on = function(eventName, callback){
 };
 
 Table.prototype.render = function(list){
-  var list_content = "";
-  for(var i = 0; i < list.length; i++)
+  let list_content = "";
+  for(let i = 0; i < list.length; i++)
   {
-    var item = list[i];
+    const item = list[i];
     item.index = i;
-    var html = this.getItemHtml(item);
+    const html = this.getItemHtml(item);
     list_content += html;
   }
 
@@ -23,8 +23,8 @@ Table.prototype.render = function(list){
 }
 
 Table.prototype.markAsRead = function(ev){
-  var item_id = $(ev.target).attr('item_id');
-  var id = $(ev.target).attr('index');
+  const item_id = $(ev.target).attr('item_id');
+  const id = $(ev.target).attr('index');
   this.changeElemStyle(id);
   this.listeners['markAsRead'].forEach(function(callback){
     callback(parseInt(item_id));
@@ -32,16 +32,16 @@ Table.prototype.markAsRead = function(ev){
 }
 
 Table.prototype.tryToMarkAsRead = function(ev){
-  var item_id = $(ev.target).attr('item_id');
+  const item_id = $(ev.target).attr('item_id');
   this.listeners['autoMarkAsRead'].forEach(function(callback){
     callback(parseInt(item_id));
   });
 }
 
 Table.prototype.getItemHtml = function(item){
-  var title = this.getItemTitle(item);
+  const title = this.getItemTitle(item);
 
-  var actionIcon = 'icon-ok';
+  let actionIcon = 'icon-ok';
   if(localStorage['deleteItensOption'] === 'true'){
     actionIcon = 'icon-remove';
   }
@@ -63,14 +63,14 @@ Table.prototype.getItemHtml = function(item){
 };
 
 Table.prototype.getFaviconUrl = function(item){
-  var url = this.getItemUrl(item);
+  const url = this.getItemUrl(item);
   //return "http://g.etfv.co/"+ encodeURIComponent(url);
   // return Table.getDomain(url)+"/favicon.ico";
    return "http://www.google.com/s2/favicons?domain_url="+ encodeURIComponent(url);
 }
 
 Table.prototype.getItemTitle = function(item){
-  var title = '';
+  let title = '';
   if(item.resolved_title)
     title = item.resolved_title;
   else if(item.given_title)
@@ -92,7 +92,7 @@ Table.prototype.getDomain = function(url){
     return "";
   url = url.replace(/https?/,"");
   url = url.replace("://", "");
-  var index = url.indexOf("/");
+  const index = url.indexOf("/");
   url = "http://" + url.substr(0, index);
   if(url.length > 30)
     url = url.substr(0, 30) + "...";
@@ -103,8 +103,10 @@ Table.prototype.changeElemStyle = function(id){
   if(document.getElementById("list_img_index_"+id))
   {
     document.getElementById("list_img_index_"+id).style.backgroundImage="url('images/uncheck.png')";
-    var elem = document.getElementById("line_index_"+id);
+    const elem = document.getElementById("line_index_"+id);
     elem.style.opacity = 0.3;
     elem.style.textDecoration = "line-through";
   }
 }
+
+export default Table;

@@ -1,5 +1,6 @@
+import Constants from './../constants.js';
+
 function Auth(){}
-CONSUMER_KEY="11758-a73b85ac41814ed5b483f3a3";
 Auth.isAuthenticate = function()
 {
   return localStorage['access_token'] && localStorage['access_token'] != "null";
@@ -9,7 +10,7 @@ Auth.authenticate = function(){
   localStorage['access_token'] = null;
   const url = "https://getpocket.com/v3/oauth/request";
   const params = {
-    consumer_key: CONSUMER_KEY,
+    consumer_key: Constants.CONSUMER_KEY,
     redirect_uri: window.location.href
   };
 
@@ -38,7 +39,7 @@ Auth.redirectToPocket = function(code){
 Auth.getConsumerKey = function(){
   const url = "https://getpocket.com/v3/oauth/authorize";
   const params = {
-    consumer_key: CONSUMER_KEY,
+    consumer_key: Constants.CONSUMER_KEY,
     code: localStorage['request_code']
   };
 
@@ -55,3 +56,5 @@ Auth.getConsumerKey = function(){
   };
   xhr.send(JSON.stringify(params));
 };
+
+export default Auth;

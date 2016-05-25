@@ -15,7 +15,7 @@ Header.prototype.initFunctions = function(){
 }
 
 Header.prototype.openOptions = function(){
-  var optionsUrl = chrome.extension.getURL('html/options.html');
+  const optionsUrl = chrome.extension.getURL('html/options.html');
   chrome.tabs.create({url: optionsUrl});
 }
 
@@ -26,7 +26,7 @@ Header.prototype.refreshList = function(){
 };
 
 Header.prototype.add = function(){
-  var that = this;
+  const that = this;
   chrome.tabs.getSelected(null, function(tab) {
     that.listeners['addItem'].forEach(function(callback){
       callback(tab);
@@ -35,7 +35,7 @@ Header.prototype.add = function(){
 };
 
 Header.prototype.orderBy = function(){
-  var order = document.getElementById("order_select").value;
+  const order = document.getElementById("order_select").value;
   this.listeners['sort'].forEach(function(callback){
     callback(order);
   });
@@ -45,3 +45,5 @@ Header.prototype.refresh = function(){
   $("#order_select").val(localStorage['iwillril_order_by'])
   $('input#iwillril_search').quicksearch('table#iwillril_table tbody tr');
 }
+
+export default Header;

@@ -1,3 +1,4 @@
+import RilList from './rilList.js';
 function ExtensionIcon(){}
 
 ExtensionIcon.set = function(icon){
@@ -24,3 +25,5 @@ ExtensionIcon.loaded = function(){
 ExtensionIcon.loading = function(){
   ExtensionIcon.set('images/loader_table.gif');
 };
+
+export default ExtensionIcon;

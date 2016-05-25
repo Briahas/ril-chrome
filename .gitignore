@@ -3,6 +3,7 @@
 *js~
 *.swp
 /node_modules/
+/build/
 background.html~
 popup.html~
 options.html~

@@ -1,8 +1,8 @@
 // webpack.config.js
 module.exports = {
   entry: {
-    popup: './js/popup.js',
-    background: './js/background.js'
+    popup: './js/popup/popup.js',
+    background: './js/background/background.js'
   },
   output: {
     path: 'build',
