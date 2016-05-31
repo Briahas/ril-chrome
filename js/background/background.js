@@ -6,6 +6,13 @@ import Request from './request.js';
 
 function Background(){}
 
+Background._syncAlarm = null;
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if(alarm.name === Constants.ALARM_SYNC){
+    Background.sync();
+  }
+});
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   ExtensionIcon.loading();
   switch (request.type) {
@@ -67,8 +74,10 @@ Background.sync = function(){
       break;
   }
 
-  window.setTimeout(Background.sync, timeout);
-}
+  chrome.alarms.clear(Background._syncAlarm, () => {
+    Background._syncAlarm = chrome.alarms.create(Constants.ALARM_SYNC, { when: Date.now() + (timeout) } );
+  });
+};
 
 Background.getList = function(callback){
   if(Auth.isAuthenticate()){

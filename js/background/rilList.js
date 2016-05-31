@@ -31,17 +31,18 @@ RilList.getItemsArray = function(filter){
 
   if(filter){
     items = items.filter((i) => {
-      return (i.resolved_title.includes(filter));
+      const ignoreCaseTitle = i.resolved_title.toLowerCase();
+      return (ignoreCaseTitle.includes(filter.toLowerCase()));
     });
   }
 
-  var order = localStorage['iwillril_order_by']
+  const order = localStorage['iwillril_order_by']
 
-  if(order == "new")
+  if(order === "new")
     return items.sort(RilList._sortNew);
   else
     return items.sort(RilList._sortOld);
-}
+};
 
 RilList.getItemId = function(url){
   var list = RilList.getItemsArray();

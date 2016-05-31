@@ -30,8 +30,9 @@ Auth.authenticate = function(){
 };
 
 Auth.redirectToPocket = function(code){
+  const url = 'https://getpocket.com/auth/authorize?request_token=';
   const redirectUri = chrome.extension.getURL('html/auth.html');
-  chrome.tabs.create({'url': 'https://getpocket.com/auth/authorize?request_token='+code+'&redirect_uri='+redirectUri}, function(tab) {
+  chrome.tabs.create({'url': `${url}${code}&redirect_uri=${redirectUri}`}, function(tab) {
 
   });
 };

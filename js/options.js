@@ -1,8 +1,7 @@
 window.addEventListener("load", init);
 
 function save_options(){
-  const button_shortcut = document.getElementById('ril_btn_shortcut').value;
-  localStorage['rilBtnShortCut'] = button_shortcut;
+  localStorage['rilBtnShortCut'] = document.getElementById('ril_btn_shortcut').value;
   localStorage["mark_auto_iwillril"] = document.getElementById("mark_as_read_check").checked ? "true" : "false";
   localStorage["remove_context_menu_iwillril"] = document.getElementById("remove_context_menu_check").checked ? "true" : "false";
   localStorage['rilUpdateInterval'] = document.getElementById('ril_slc_updateinterval').value;
