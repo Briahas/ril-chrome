@@ -43,6 +43,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       sendResponse({success: true, payload: RilList.getItemsArray(request.payload)});
       break;
     }
+    case 'keyShortCut':{
+      Background.keyboardShortcutManager(request);
+      break;
+    }
   }
   return true;
 });
@@ -53,9 +57,6 @@ Background.init = function(){
 
   if(!chrome.tabs.onUpdated.hasListeners())
     chrome.tabs.onUpdated.addListener(Background.manageSelectedTab);
-
-  if(!chrome.extension.onRequest.hasListeners())
-    chrome.extension.onRequest.addListener(Background.onExtensionRequest);
 };
 
 Background.sync = function(){
@@ -104,11 +105,23 @@ Background.manageSelectedTab = function(tabid, obj){
     for(let i = 0; i < list.length; i++){
       const obj = list[i];
       if(tab.url == obj.resolved_url || tab.url == obj.given_url){
-        chrome.contextMenus.create({"title": "Mark as Read ", "onclick": Background.markAsRead,"contexts":["page"]});
+        chrome.contextMenus.create({
+          id: 'MarkAsReadCM',
+          title: "Mark as Read ",
+          contexts:["page"]
+        });
+        chrome.contextMenus.onClicked.addListener(Background.markAsRead);
+
         return;
       }
     }
-    chrome.contextMenus.create({"title": "I'll Read it Later ", "onclick": Background.iWillRil,"contexts":["page", "link"]});
+    chrome.contextMenus.create({
+      id: 'RILCM',
+      title: "I'll Read it Later ",
+      contexts:["page", "link"]
+    });
+
+    chrome.contextMenus.onClicked.addListener(Background.iWillRil);
   });
 };
 
@@ -155,13 +168,6 @@ Background.updateContent = function(callback){
     if(callback)
       callback({success: resp.status === 200, payload: RilList.getItemsArray()});
   }, 0);
-};
-
-Background.onExtensionRequest = function(request, sender, sendResponse){
-  switch(request.name){
-    case 'keyShortCut':
-      Background.keyboardShortcutManager(request);
-  }
 };
 
 Background.keyboardShortcutManager = function(request){

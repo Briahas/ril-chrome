@@ -2,6 +2,7 @@
 *json~
 *js~
 *.swp
+npm-debug.log
 /node_modules/
 /build/
 background.html~

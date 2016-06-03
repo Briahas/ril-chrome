@@ -14,7 +14,7 @@ function save_options(){
     // chrome.extension.getBackgroundPage().update_loop();
   }
 
-  chrome.extension.getBackgroundPage().Background.updateUncountLabel();
+  chrome.runtime.getBackgroundPage().Background.updateUncountLabel();//TODO change this
 }
 
 function init(){
