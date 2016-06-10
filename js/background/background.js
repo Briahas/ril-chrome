@@ -6,6 +6,9 @@ import Request from './request.js';
 
 function Background(){}
 
+const list = new RilList();
+const extensionIcon = new ExtensionIcon(list);
+
 Background._syncAlarm = null;
 chrome.alarms.onAlarm.addListener((alarm) => {
   if(alarm.name === Constants.ALARM_SYNC){
@@ -14,7 +17,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  ExtensionIcon.loading();
+  extensionIcon.loading();
   switch (request.type) {
     case Constants.ACTION_ARCHIVE:{
       Request.archieve(Background.updateContent.bind(this, sendResponse), request.payload);
@@ -34,13 +37,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       Background.getList(sendResponse);
       break;
     }
-    case Constants.ACTION_SORTLIST:{
+    case Constants.ACTION_SORTLIST: {
       localStorage['iwillril_order_by'] = request.payload;
-      sendResponse({success: true, payload: RilList.getItemsArray()});
+      sendResponse({success: true, payload: list.getItemsArray()});
       break;
     }
     case Constants.ACTION_FILTER:{
-      sendResponse({success: true, payload: RilList.getItemsArray(request.payload)});
+      sendResponse({success: true, payload: list.getItemsArray(request.payload)});
       break;
     }
     case 'keyShortCut':{
@@ -83,8 +86,8 @@ Background.sync = function(){
 Background.getList = function(callback){
   if(Auth.isAuthenticate()){
     if(localStorage['lastResponse']) {
-      callback({success: 200, payload: RilList.getItemsArray()});
-      ExtensionIcon.loaded();
+      callback({success: 200, payload: list.getItemsArray()});
+      extensionIcon.loaded();
     }
     else {
       Background.updateContent(callback);
@@ -97,11 +100,11 @@ Background.getList = function(callback){
 
 Background.manageSelectedTab = function(tabid, obj){
   chrome.contextMenus.removeAll();
+  const list = this.list.getItemsArray();
+
   if(localStorage['remove_context_menu_iwillril'] && localStorage['remove_context_menu_iwillril'] == 'true')
     return;
   chrome.tabs.get(tabid, function (tab){
-    const list = RilList.getItemsArray();
-
     for(let i = 0; i < list.length; i++){
       const obj = list[i];
       if(tab.url == obj.resolved_url || tab.url == obj.given_url){
@@ -126,16 +129,16 @@ Background.manageSelectedTab = function(tabid, obj){
 };
 
 Background.markAsRead = function(info, tab){
-  ExtensionIcon.loading();
+  extensionIcon.loading();
   chrome.tabs.getSelected(null, function(tab) {
     const url = tab.url;
-    const itemId = RilList.getItemId(url);
+    const itemId = list.getItemId(url);
     Request.archieve(Background.updateContent, itemId);
   });
 };
 
 Background.iWillRil = function(info, tab){
-  ExtensionIcon.loading();
+  extensionIcon.loading();
   let title, url;
 
   if(info.linkUrl){
@@ -151,7 +154,7 @@ Background.iWillRil = function(info, tab){
 };
 
 Background.updateUncountLabel = function(){
-  ExtensionIcon.updateNumber();
+  extensionIcon.updateNumber();
 };
 
 Background.updateContent = function(callback){
@@ -163,10 +166,10 @@ Background.updateContent = function(callback){
     else{
       localStorage['lastResponse'] = resp.response;
     }
-    ExtensionIcon.loaded();
-    ExtensionIcon.updateNumber();
+    extensionIcon.loaded();
+    extensionIcon.updateNumber();
     if(callback)
-      callback({success: resp.status === 200, payload: RilList.getItemsArray()});
+      callback({success: resp.status === 200, payload: list.getItemsArray()});
   }, 0);
 };
 
@@ -179,7 +182,7 @@ Background.keyboardShortcutManager = function(request){
 
   if(shortCut.toLowerCase() == charKey.toLowerCase())
     chrome.tabs.getSelected(null, function(tab){
-      if(RilList.getItemId(tab.url))
+      if(list.getItemId(tab.url))
         Background.markAsRead({}, tab);
       else
         Background.iWillRil({}, tab);

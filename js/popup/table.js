@@ -76,14 +76,13 @@ Table.prototype.getFaviconUrl = function(item){
 };
 
 Table.prototype.getItemTitle = function(item){
-  let title = '';
   if(item.resolved_title)
-    title = item.resolved_title;
-  else if(item.given_title)
-    title =  item.given_title;
-  else
-    title = this.getItemUrl(item);
+    return item.resolved_title;
 
+  if(item.given_title)
+    return item.given_title;
+
+  const title = this.getItemUrl(item);
   return title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 };
 
@@ -91,18 +90,6 @@ Table.prototype.getItemUrl = function(item){
   if(item.resolved_url)
     return item.resolved_url;
   return item.given_url;
-};
-
-Table.prototype.getDomain = function(url){
-  if(!url)
-    return "";
-  url = url.replace(/https?/,"");
-  url = url.replace("://", "");
-  const index = url.indexOf("/");
-  url = "http://" + url.substr(0, index);
-  if(url.length > 30)
-    url = url.substr(0, 30) + "...";
-  return url;
 };
 
 Table.prototype.changeElemStyle = function(id){

@@ -2,7 +2,8 @@
 module.exports = {
   entry: {
     popup: './js/popup/popup.js',
-    background: './js/background/background.js'
+    background: './js/background/background.js',
+    oauthcallback: './js/oauthcallback.js'
   },
   output: {
     path: 'build',

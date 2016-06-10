@@ -70,9 +70,12 @@ Popup.prototype._addTableEvents = function(){
 Popup.prototype.init = function(){
   const that = this;
   that.header.initFunctions();
-  that.eventNotifier({type: 'getList'}, function(response) {
-    that.updatePage(response);
-  });
+  that.updatePage({success: true, payload: []});
+  setTimeout(function(){
+    that.eventNotifier({type: 'getList'}, function(response) {
+      that.updatePage(response);
+    });
+  }, 0);
 };
 
 Popup.prototype.showLoadScreen = function(){
