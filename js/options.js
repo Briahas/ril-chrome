@@ -1,14 +1,22 @@
 window.addEventListener("load", init);
 
-function save_options(){
-  localStorage['rilBtnShortCut'] = document.getElementById('rilBtnShortCut').value;
-  localStorage["mark_auto_iwillril"] = document.getElementById("mark_auto_iwillril").checked ? "true" : "false";
-  localStorage["remove_context_menu_iwillril"] = document.getElementById("remove_context_menu_iwillril").checked ? "true" : "false";
-  localStorage['rilUpdateInterval'] = document.getElementById('rilUpdateInterval').value;
-  localStorage['removeUncountLabel'] = document.getElementById('removeUncountLabel').checked ? "true" : "false";
-  localStorage['deleteItensOption'] = document.getElementById('deleteItensOption').checked ? "true" : "false";
+const BTN_SHORTCUT = 'rilBtnShortCut';
+const AUTO_IWILLRIL = 'mark_auto_iwillril';
+const REMOVE_CONTEXT_MENU = 'remove_context_menu_iwillril';
+const UPDATE_INTERVAL = 'rilUpdateInterval';
+const REMOVE_UNCOUNT_LABEL = 'removeUncountLabel';
+const DELETE_ITENS = 'deleteItensOption';
+
+function saveOptions(){
+  localStorage[BTN_SHORTCUT] = document.getElementById(BTN_SHORTCUT).value;
+  localStorage[AUTO_IWILLRIL] = document.getElementById(AUTO_IWILLRIL).checked;
+  localStorage[REMOVE_CONTEXT_MENU] = document.getElementById(REMOVE_CONTEXT_MENU).checked;
+  localStorage[UPDATE_INTERVAL] = document.getElementById(UPDATE_INTERVAL).value;
+  localStorage[REMOVE_UNCOUNT_LABEL] = document.getElementById(REMOVE_UNCOUNT_LABEL).checked;
+  localStorage[DELETE_ITENS] = document.getElementById(DELETE_ITENS).checked;
 
   if(localStorage['ril_updateloopfunc']){
+
     clearInterval(localStorage['ril_updateloopfunc']);
     localStorage['ril_updateloopfunc'] = '';
     // chrome.extension.getBackgroundPage().update_loop();
@@ -18,28 +26,13 @@ function save_options(){
 }
 
 function init(){
-  document.querySelector("#rilBtnShortCut").addEventListener('keyup', save_options);
-  document.querySelector("input").addEventListener('change', save_options);
-  document.querySelector("select").addEventListener('change', save_options);
-
-  if(localStorage['rilBtnShortCut'])
-    document.querySelector('#rilBtnShortCut').value = localStorage['rilBtnShortCut'];
-
-  if(localStorage['rilUpdateInterval'])
-    document.querySelector('#rilUpdateInterval').value = localStorage['rilUpdateInterval'];
-  else
-    document.querySelector('#rilUpdateInterval').value = 2;
-
-  if(localStorage["mark_auto_iwillril"])
-    document.getElementById("mark_auto_iwillril").checked = localStorage["mark_auto_iwillril"] === "true";
-
-  if(localStorage["remove_context_menu_iwillril"])
-    document.getElementById("remove_context_menu_iwillril").checked = localStorage["remove_context_menu_iwillril"] === "true";
-
-  if(localStorage['removeUncountLabel'])
-    document.getElementById('removeUncountLabel').checked = localStorage["removeUncountLabel"] === "true";
-
-  if(localStorage['deleteItensOption'])
-    document.getElementById('deleteItensOption').checked = localStorage["deleteItensOption"] === "true";
-
+  document.querySelector(`#${BTN_SHORTCUT}`).addEventListener('keyup', saveOptions);
+  document.querySelectorAll("input").forEach(function() { this.addEventListener('change', saveOptions); });
+  document.querySelectorAll("select").forEach(function() { this.addEventListener('change', saveOptions); });
+  document.getElementById(BTN_SHORTCUT).value = localStorage[BTN_SHORTCUT] || null;
+  document.getElementById(UPDATE_INTERVAL).value = localStorage[UPDATE_INTERVAL] || 2;
+  document.getElementById(AUTO_IWILLRIL).checked = localStorage[AUTO_IWILLRIL] === "true";
+  document.getElementById(REMOVE_CONTEXT_MENU).checked = localStorage[REMOVE_CONTEXT_MENU] === "true";
+  document.getElementById(REMOVE_UNCOUNT_LABEL).checked = localStorage[REMOVE_UNCOUNT_LABEL] === "true";
+  document.getElementById(DELETE_ITENS).checked = localStorage[DELETE_ITENS] === "true";
 }

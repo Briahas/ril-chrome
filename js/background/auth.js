@@ -1,8 +1,7 @@
 import Constants from './../constants.js';
 
 function Auth(){}
-Auth.isAuthenticate = function()
-{
+Auth.isAuthenticate = function(){
   return localStorage['access_token'] && localStorage['access_token'] != "null";
 };
 

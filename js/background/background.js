@@ -96,36 +96,38 @@ Background.getList = function(callback){
   else{
     Auth.authenticate();
   }
-}
+};
 
 Background.manageSelectedTab = function(tabid, obj){
-  chrome.contextMenus.removeAll();
-  const list = this.list.getItemsArray();
+  chrome.contextMenus.removeAll(() => {
+    if(localStorage['remove_context_menu_iwillril'] && localStorage['remove_context_menu_iwillril'] == 'true')
+      return;
+    const items = list.getItemsArray();
 
-  if(localStorage['remove_context_menu_iwillril'] && localStorage['remove_context_menu_iwillril'] == 'true')
-    return;
-  chrome.tabs.get(tabid, function (tab){
-    for(let i = 0; i < list.length; i++){
-      const obj = list[i];
-      if(tab.url == obj.resolved_url || tab.url == obj.given_url){
-        chrome.contextMenus.create({
-          id: 'MarkAsReadCM',
-          title: "Mark as Read ",
-          contexts:["page"]
-        });
-        chrome.contextMenus.onClicked.addListener(Background.markAsRead);
+    chrome.tabs.get(tabid, function (tab){
+      for(let i = 0; i < items.length; i++){
+        const obj = items[i];
+        if(tab.url == obj.resolved_url || tab.url == obj.given_url){
+          chrome.contextMenus.create({
+            id: `MarkAsReadCM-${i}`,
+            title: "Mark as Read ",
+            contexts:["page"]
+          });
+          chrome.contextMenus.onClicked.addListener(Background.markAsRead);
 
-        return;
+          return;
+        }
       }
-    }
-    chrome.contextMenus.create({
-      id: 'RILCM',
-      title: "I'll Read it Later ",
-      contexts:["page", "link"]
-    });
+      chrome.contextMenus.create({
+        id: 'RILCM',
+        title: "I'll Read it Later ",
+        contexts:["page", "link"]
+      });
 
-    chrome.contextMenus.onClicked.addListener(Background.iWillRil);
+      chrome.contextMenus.onClicked.addListener(Background.iWillRil);
+    });
   });
+
 };
 
 Background.markAsRead = function(info, tab){

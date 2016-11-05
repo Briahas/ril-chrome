@@ -8,7 +8,7 @@ RilList.prototype._sortOld = function(a, b){
   else if (a.time_updated < b.time_updated)
     return -1;
   return 0;
-}
+};
 
 RilList.prototype._sortNew = function(a, b){
   if(a.time_updated > b.time_updated)
@@ -16,7 +16,7 @@ RilList.prototype._sortNew = function(a, b){
   else if (a.time_updated < b.time_updated)
     return 1;
   return 0;
-}
+};
 
 RilList.prototype.getItemsArray = function(filter){
   const lastResponse = localStorage['lastResponse'];
@@ -36,18 +36,20 @@ RilList.prototype.getItemsArray = function(filter){
     });
   }
 
-  const order = localStorage['iwillril_order_by']
-
-  if(order === "new")
+  const order = localStorage['iwillril_order_by'];
+  if(order === "new"){
+    console.log('NEW ==>');
     return items.sort(RilList._sortNew);
-  else
-    return items.sort(RilList._sortOld);
+  }
+  console.log('OLD ==>');
+
+  return items.sort(RilList._sortOld);
 };
 
 RilList.prototype.getItemId = function(url){
-  var list = this.getItemsArray();
-  for(var i = 0; i < list.length; i++){
-    var obj = list[i];
+  const list = this.getItemsArray();
+  for(let i = 0; i < list.length; i++){
+    const obj = list[i];
     if(obj.resolved_url == url || obj.given_url == url)
       return parseInt(obj.item_id);
   }
