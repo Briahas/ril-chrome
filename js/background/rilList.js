@@ -3,17 +3,21 @@ function RilList(){
 }
 
 RilList.prototype._sortOld = function(a, b){
-  if(a.time_updated > b.time_updated)
+  const timeAddedA = parseInt(a.time_added);
+  const timeAddedB = parseInt(b.time_added);
+  if(timeAddedA > timeAddedB)
     return 1;
-  else if (a.time_updated < b.time_updated)
+  else if (timeAddedA < timeAddedB)
     return -1;
   return 0;
 };
 
 RilList.prototype._sortNew = function(a, b){
-  if(a.time_updated > b.time_updated)
+  const timeAddedA = parseInt(a.time_added);
+  const timeAddedB = parseInt(b.time_added);
+  if(timeAddedA > timeAddedB)
     return -1;
-  else if (a.time_updated < b.time_updated)
+  else if (timeAddedA < timeAddedB)
     return 1;
   return 0;
 };
@@ -37,13 +41,12 @@ RilList.prototype.getItemsArray = function(filter){
   }
 
   const order = localStorage['iwillril_order_by'];
+  
   if(order === "new"){
-    console.log('NEW ==>');
-    return items.sort(RilList._sortNew);
+    return items.sort(this._sortNew);
   }
-  console.log('OLD ==>');
 
-  return items.sort(RilList._sortOld);
+  return items.sort(this._sortOld);
 };
 
 RilList.prototype.getItemId = function(url){
