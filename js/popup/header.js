@@ -12,6 +12,7 @@ Header.prototype.initFunctions = function(){
   document.querySelector("#option_footer").addEventListener('click', this.openOptions.bind(this));
   document.querySelector("#sync_button").addEventListener('click', this.refreshList.bind(this));
   document.querySelector("#order_select").addEventListener('change', this.orderBy.bind(this));
+  document.querySelector("#iwillril_search").addEventListener('change', this.filter.bind(this));
 };
 
 Header.prototype.openOptions = function(){
@@ -34,6 +35,12 @@ Header.prototype.add = function(){
   });
 };
 
+Header.prototype.filter = function(){
+  const order = document.getElementById("iwillril_search").value;
+  this.listeners['filter'].forEach(function(callback){
+    callback(order);
+  });
+};
 
 Header.prototype.orderBy = function(){
   const order = document.getElementById("order_select").value;

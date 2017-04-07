@@ -64,7 +64,7 @@ class Popup{
       });
     });
     this.header.on('filter', (data) => {
-      function filter(){
+      const filter = () => {
         this.eventNotifier({type: 'filter', payload: data}, (response) => {
           this.updatePage(response);
         });
