@@ -17,7 +17,6 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  extensionIcon.loading();
   switch (request.type) {
     case Constants.ACTION_ARCHIVE:{
       Request.archieve(Background.updateContent.bind(this, sendResponse), request.payload);
@@ -63,6 +62,7 @@ Background.init = function(){
 };
 
 Background.sync = function(){
+  extensionIcon.loading();
   Background.updateContent();
   const interval = localStorage['rilUpdateInterval'];
   let timeout = 1000 * 60 * 60 * 2;
