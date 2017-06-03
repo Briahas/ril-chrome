@@ -38,23 +38,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     }
     case Constants.ACTION_SORTLIST: {
       localStorage['iwillril_order_by'] = request.payload;
-      sendResponse({
-        success: true,
-        payload: {
-          list: list.getItemsArray(),
-          order: localStorage.getItem('iwillril_order_by')
-        }
-      });
+      sendResponse(Background._buildResponse(true, list.getItemsArray()));
       break;
     }
     case Constants.ACTION_FILTER:{
-      sendResponse({
-        success: true,
-        payload: {
-          list: list.getItemsArray(request.payload),
-          order: localStorage.getItem('iwillril_order_by')
-        }
-      });
+      sendResponse(Background._buildResponse(true, list.getItemsArray(request.payload)));
       break;
     }
     case 'keyShortCut':{
@@ -98,13 +86,7 @@ Background.sync = function(){
 Background.getList = function(callback){
   if(Auth.isAuthenticate()){
     if(localStorage['lastResponse']) {
-      callback({
-        success: 200,
-        payload: {
-          list: list.getItemsArray(),
-          order: localStorage.getItem('iwillril_order_by')
-        }
-      });
+      callback(Background._buildResponse(true, list.getItemsArray()));
       extensionIcon.loaded();
     }
     else {
@@ -190,15 +172,19 @@ Background.updateContent = function(callback){
     extensionIcon.updateNumber();
     if(callback)
     {
-      callback({
-        success: resp.status === 200, 
-        payload: {
-          list: list.getItemsArray(),
-          order: localStorage.getItem('iwillril_order_by')
-        }
-      });
+      callback(Background._buildResponse(resp.status === 200, list.getItemsArray()));
     }
   }, 0);
+};
+
+Background._buildResponse = function(success, list) {
+  return {
+    success,
+    payload: {
+      list,
+      order: localStorage.getItem('iwillril_order_by')
+    }
+  };
 };
 
 Background.keyboardShortcutManager = function(request){
