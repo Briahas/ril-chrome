@@ -38,11 +38,23 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     }
     case Constants.ACTION_SORTLIST: {
       localStorage['iwillril_order_by'] = request.payload;
-      sendResponse({success: true, payload: list.getItemsArray()});
+      sendResponse({
+        success: true,
+        payload: {
+          list: list.getItemsArray(),
+          order: localStorage.getItem('iwillril_order_by')
+        }
+      });
       break;
     }
     case Constants.ACTION_FILTER:{
-      sendResponse({success: true, payload: list.getItemsArray(request.payload)});
+      sendResponse({
+        success: true,
+        payload: {
+          list: list.getItemsArray(request.payload),
+          order: localStorage.getItem('iwillril_order_by')
+        }
+      });
       break;
     }
     case 'keyShortCut':{
@@ -86,7 +98,13 @@ Background.sync = function(){
 Background.getList = function(callback){
   if(Auth.isAuthenticate()){
     if(localStorage['lastResponse']) {
-      callback({success: 200, payload: list.getItemsArray()});
+      callback({
+        success: 200,
+        payload: {
+          list: list.getItemsArray(),
+          order: localStorage.getItem('iwillril_order_by')
+        }
+      });
       extensionIcon.loaded();
     }
     else {
@@ -171,7 +189,15 @@ Background.updateContent = function(callback){
     extensionIcon.loaded();
     extensionIcon.updateNumber();
     if(callback)
-      callback({success: resp.status === 200, payload: list.getItemsArray()});
+    {
+      callback({
+        success: resp.status === 200, 
+        payload: {
+          list: list.getItemsArray(),
+          order: localStorage.getItem('iwillril_order_by')
+        }
+      });
+    }
   }, 0);
 };
 

@@ -7,7 +7,7 @@ Table.prototype.on = function(eventName, callback){
   this.listeners[eventName].push(callback);
 };
 
-Table.prototype.render = function(list){
+Table.prototype.render = function({list}){
   let list_content = "";
   for(let i = 0; i < list.length; i++)
   {

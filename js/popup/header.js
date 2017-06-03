@@ -49,8 +49,8 @@ Header.prototype.orderBy = function(){
   });
 };
 
-Header.prototype.refresh = function(){
-  document.querySelector("#order_select").value = localStorage['iwillril_order_by'];
+Header.prototype.refresh = function({order}){
+  document.querySelector("#order_select").value = order;
   document.querySelector('#iwillril_search').addEventListener('keyup', (ev) => {
     this.listeners['filter'].forEach( (callback) => callback(ev.target.value) );
   });

@@ -19,7 +19,7 @@ class Popup{
 
   init() {
     this.header.initFunctions();
-    this.updatePage({success: true, payload: []});
+    this.updatePage({success: true, payload: {list: []}});
     setTimeout(() => {
       this.eventNotifier({type: 'getList'}, (response) => {
         this.updatePage(response);
@@ -40,7 +40,7 @@ class Popup{
   updatePage(response){
     if(response.success){
       this.hideLoadScreen();
-      this.header.refresh();
+      this.header.refresh(response.payload);
       this.table.render(response.payload);
     }
   }
