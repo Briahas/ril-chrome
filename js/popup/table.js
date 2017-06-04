@@ -69,7 +69,7 @@ Table.prototype.getItemHtml = function(item){
   const title = this.getItemTitle(item);
 
   let actionIcon = 'icon-ok';
-  if(this.showDeleteItemOption){
+  if(this.showDeleteItemOption) {
     actionIcon = 'icon-remove';
   }
   return `
