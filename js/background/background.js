@@ -183,8 +183,8 @@ Background._buildResponse = function(success, list) {
     payload: {
       list,
       order: localStorage.getItem('iwillril_order_by'),
-      showDeleteItemOption: localStorage['deleteItensOption'],
-      autoMarkAsRead: localStorage["mark_auto_iwillril"]
+      showDeleteItemOption: localStorage['deleteItensOption'] === 'true',
+      autoMarkAsRead: localStorage["mark_auto_iwillril"] === 'true'
     }
   };
 };
