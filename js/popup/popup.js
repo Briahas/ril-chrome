@@ -76,21 +76,24 @@ class Popup{
 
   _addTableEvents() {
     this.table.on('markAsRead', (itemId) => {
-      let action = 'archive';
-      if(localStorage['deleteItensOption'] === 'true')
-        action = 'delete';
+      const action = 'archive';
+      this.eventNotifier({type: action, payload: itemId}, (response) => {
+        this.updatePage(response);
+      });
+    });
+
+    this.table.on('deleteItem', (itemId) => {
+      const action = 'delete';
       this.eventNotifier({type: action, payload: itemId}, (response) => {
         this.updatePage(response);
       });
     });
 
     this.table.on('autoMarkAsRead', (itemId) => {
-      if(localStorage["mark_auto_iwillril"] == "true"){
-        const action = 'archive';
-        this.eventNotifier({type: action, payload: itemId}, (response) => {
-          this.updatePage(response);
-        });
-      }
+      const action = 'archive';
+      this.eventNotifier({type: action, payload: itemId}, (response) => {
+        this.updatePage(response);
+      });
     });
   }
 }

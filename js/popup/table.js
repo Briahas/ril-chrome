@@ -1,5 +1,7 @@
 function Table(){
   this.listeners = {};
+  this.showDeleteItemOption = false;
+  this.autoMarkAsRead = false;
 }
 
 Table.prototype.on = function(eventName, callback){
@@ -7,7 +9,9 @@ Table.prototype.on = function(eventName, callback){
   this.listeners[eventName].push(callback);
 };
 
-Table.prototype.render = function({list}){
+Table.prototype.render = function({list, showDeleteItemOption, autoMarkAsRead}){
+  this.showDeleteItemOption = showDeleteItemOption;
+  this.autoMarkAsRead = autoMarkAsRead;
   let list_content = "";
   for(let i = 0; i < list.length; i++)
   {
@@ -21,12 +25,18 @@ Table.prototype.render = function({list}){
   const markAsReadIcons = document.querySelectorAll(".table_img_mark_as_read");
   for(let i = 0; i< markAsReadIcons.length; i++){
     const icon = markAsReadIcons[i];
-    icon.addEventListener('click', this.markAsRead.bind(this));
+    if (this.showDeleteItemOption) {
+      icon.addEventListener('click', this.deleteItem.bind(this));
+    } else {
+      icon.addEventListener('click', this.markAsRead.bind(this));
+    }
   }
-  const itemLinkTds = document.querySelectorAll(".item_link_td");
-  for(let i = 0; i< itemLinkTds.length; i++){
-    const item = itemLinkTds[i];
-    item.addEventListener('click', this.tryToMarkAsRead.bind(this));
+  if (this.autoMarkAsRead) {
+    const itemLinkTds = document.querySelectorAll(".item_link_td");
+    for(let i = 0; i< itemLinkTds.length; i++){
+      const item = itemLinkTds[i];
+      item.addEventListener('click', this.tryToMarkAsRead.bind(this));
+    }
   }
 };
 
@@ -35,6 +45,15 @@ Table.prototype.markAsRead = function(ev){
   const id = ev.target.getAttribute('index');
   this.changeElemStyle(id);
   this.listeners['markAsRead'].forEach(function(callback){
+    callback(parseInt(item_id));
+  });
+};
+
+Table.prototype.deleteItem = function(ev){
+  const item_id = ev.target.getAttribute('item_id');
+  const id = ev.target.getAttribute('index');
+  this.changeElemStyle(id);
+  this.listeners['deleteItem'].forEach(function(callback){
     callback(parseInt(item_id));
   });
 };
@@ -50,7 +69,7 @@ Table.prototype.getItemHtml = function(item){
   const title = this.getItemTitle(item);
 
   let actionIcon = 'icon-ok';
-  if(localStorage['deleteItensOption'] === 'true'){
+  if(this.showDeleteItemOption){
     actionIcon = 'icon-remove';
   }
   return `
