@@ -19,13 +19,13 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   switch (request.type) {
     case Constants.ACTION_ARCHIVE:{
-      Request.archieve(Background.updateContent.bind(this, sendResponse), request.payload);
+      Request.archieve(request.payload, Background.updateContent.bind(this, sendResponse));
       break;
     }
     case Constants.ACTION_ADD:{
       const url = request.payload.url;
       const title = request.payload.title;
-      Request.add(Background.updateContent.bind(this, sendResponse), url, title);
+      Request.add(url, title, Background.updateContent.bind(this, sendResponse));
       break;
     }
     case Constants.ACTION_REFRESH:{
@@ -135,7 +135,7 @@ Background.markAsRead = function(info, tab){
   chrome.tabs.getSelected(null, function(tab) {
     const url = tab.url;
     const itemId = list.getItemId(url);
-    Request.archieve(Background.updateContent, itemId);
+    Request.archieve(itemId, Background.updateContent.bind(this));
   });
 };
 
@@ -152,7 +152,7 @@ Background.iWillRil = function(info, tab){
   }
 
   if(url)
-    Request.add(Background.updateContent, url, title);
+    Request.add(url, title, Background.updateContent.bind(this));
 };
 
 Background.updateUncountLabel = function(){
@@ -170,7 +170,7 @@ Background.updateContent = function(callback){
     }
     extensionIcon.loaded();
     extensionIcon.updateNumber();
-    if(callback)
+    if(callback && typeof callback === "function")
     {
       callback(Background._buildResponse(resp.status === 200, list.getItemsArray()));
     }

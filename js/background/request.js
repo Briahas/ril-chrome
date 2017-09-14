@@ -13,7 +13,7 @@ Request._post = function(url, params, callback){
   xhr.send(JSON.stringify(params));
 };
 
-Request.add = function(callback, addurl, title){
+Request.add = function(addurl, title, callback){
   const url = "https://getpocket.com/v3/add";
 
   const params = {
@@ -26,7 +26,7 @@ Request.add = function(callback, addurl, title){
   Request._post(url, params, callback);
 };
 
-Request.get = function(callback, time){
+Request.get = function(callback){
   const url = "https://getpocket.com/v3/get";
   const params = {
     "sort": "oldest",
@@ -37,7 +37,7 @@ Request.get = function(callback, time){
   Request._post(url, params, callback);
 };
 
-Request.archieve = function(callback, item_id){
+Request.archieve = function(item_id, callback){
   const url = "https://getpocket.com/v3/send";
   const actions = [
     {
@@ -55,7 +55,7 @@ Request.archieve = function(callback, item_id){
   Request._post(url, params, callback);
 };
 
-Request.delete = function(callback, item_id){
+Request.delete = function(item_id, callback){
   const url = "https://getpocket.com/v3/send";
   const actions = [
     {
