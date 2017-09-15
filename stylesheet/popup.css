@@ -3,7 +3,6 @@ select {
 }
 
 body {
-  font-family: Helvetica, Arial, sans-serif;
   font-size: 8px;
   margin: 0px;
 }
@@ -63,7 +62,6 @@ body {
 
 td{
   font-size:12px;
-  border-bottom: 1px solid #eee;
 }
 
 .icon-ok{
@@ -196,12 +194,11 @@ table{
 
 #iwillril_search{
   border: solid 1px gray;
-  background-image:url(../images/search.png);
   background-repeat:no-repeat;
   margin-left: 10px;
   width: 200px;
+  margin-top: 2px;
   padding-left: 15px;
-  background-color:#EEE;
 }
 
 #iwillril_search:focus{
