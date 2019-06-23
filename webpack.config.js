@@ -1,22 +1,23 @@
 // webpack.config.js
 module.exports = {
   entry: {
-    popup: './js/popup/popup.js',
-    background: './js/background/background.js',
-    oauthcallback: './js/oauthcallback.js'
+    options: './src/options.js',
+    popup: './src/popup/popup.js',
+    background: './src/background/background.js',
+    oauthcallback: './src/oauthcallback.js'
   },
   output: {
-    path: 'build',
+    path: __dirname + '/build',
     filename: '[name].js' // Template based on keys in entry above
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
-        loader: 'babel', // 'babel-loader' is also a legal name to reference
+        loader: 'babel-loader', // 'babel-loader' is also a legal name to reference
         query: {
-          presets: ['es2015']
+          presets: ['@babel/preset-env']
         }
       }
     ]
