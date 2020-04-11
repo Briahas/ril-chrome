@@ -1,0 +1,28 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="../stylesheet/popup.css">
+  <script type="text/javascript" src="../dist/main.js"></script>
+</head>
+<body>
+  <div id="page_body">
+   <header style="position: relative;">
+     <input id='iwillril_search' type='text' size=25>
+     <span id="add_button" class="icon_header icon icon-bookmark" title="Add">Add</span>
+     <span id="sync_button" class="icon_header icon icon-refresh" title="Sync">Sync</span>
+     <span id="option_footer" class='icon_header icon icon-wrench' title="Settings">Set</span>
+     <div id="order_select_div">
+      <select id="order_select" onchange="order_by()">
+        <option value="old">Oldest</option>
+        <option value="new">Newest</option>
+      </select>
+    </div>
+  </header>
+  <div id="list_div">
+    <table  id='iwillril_table' cellpadding="5" width='95%' >
+      <tbody id="table_list">
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

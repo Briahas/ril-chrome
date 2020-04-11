@@ -19,32 +19,37 @@ RilList._sortNew = function(a, b){
 }
 
 RilList.getItemsArray = function(term = null){
-  var lastResponse = localStorage['lastResponse'];
-  if(!lastResponse)
+  var filteredItems = []
+  var items = localStorage['ITEMS'];
+  if(!items)
     return [];
 
-  var obj = JSON.parse(lastResponse);
-  var items = [];
-  for(var key in obj.list){
-    const item = obj.list[key];
+  try {
+    items = JSON.parse(items);
+  }catch {
+    return []
+  }
+
+  for(var key in items){
+    const item = items[key];
     if (!term){
-      items.push(item);
+      filteredItems.push(item);
       continue
     }
     let itemTitle = item.resolved_title;
     itemTitle = itemTitle || item.given_title;
 
     if(itemTitle.toLowerCase().includes(term.toLowerCase())){
-      items.push(item)
+      filteredItems.push(item)
     }
   }
 
   var order = localStorage['iwillril_order_by']
 
   if(order == "new")
-    return items.sort(RilList._sortNew);
+    return filteredItems.sort(RilList._sortNew);
   else
-    return items.sort(RilList._sortOld);
+    return filteredItems.sort(RilList._sortOld);
 }
 
 RilList.getItemId = function(url){
@@ -57,3 +62,4 @@ RilList.getItemId = function(url){
   return null;
 }
 
+export default RilList

@@ -1,0 +1,186 @@
+import Header, {
+  HEADER_ADD_EVENT,
+  HEADER_REFRESH_EVENT,
+  HEADER_CHANGE_SORT_EVENT,
+  HEADER_SEARCH_EVENT
+} from './header'
+import Auth from './auth'
+import Request from './request'
+import ExtensionIcon from './extensionIcon'
+import RilList from './rilList'
+import Table from './table'
+import {
+  ADD,
+  REFRESH_ITEMS
+} from './events'
+
+window.addEventListener("load", init);
+
+const header = new Header()
+const table = new Table();
+
+header.on(HEADER_ADD_EVENT, () => {
+  chrome.tabs.getSelected(null, async function(tab) {
+    var url = tab.url;
+    var title = tab.title;
+    const item = await addItemInPocket(url, title)
+    const items = await getNewItems()
+    await saveItemsInRepository(items)
+    await rebuildTable()
+  });
+})
+
+header.on(HEADER_REFRESH_EVENT, async () => {
+  showLoadScreen()
+  const items = await getNewItems()
+  await saveItemsInRepository(items)
+  await rebuildTable()
+  hideLoadScreen()
+})
+
+header.on(HEADER_CHANGE_SORT_EVENT, async (order) => {
+  localStorage['iwillril_order_by'] = order
+  await rebuildTable()
+})
+
+header.on(HEADER_SEARCH_EVENT, async (term) => {
+  await rebuildTable(term)
+})
+
+async function init(){
+  header.initFunctions();
+  const isAuth = await Auth.isAuthenticate()
+  if(isAuth){
+    window.setTimeout(function(){buildPage();}, 1);
+  }
+  else{
+    Auth.authenticate();
+  }
+}
+
+//NEW
+function addItemInPocket(url, title) {
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({
+      msg : ADD,
+      payload: {
+        url, title
+      }
+    }, function(response) {
+      if (response.success) {
+        resolve(response.payload)
+      }
+    });
+  })
+}
+
+//NEW
+function getNewItems() {
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({
+      msg : REFRESH_ITEMS,
+      payload: {
+
+      }
+    }, function(response) {
+      if (response.success) {
+        resolve(response.payload)
+      }
+    });
+  })
+}
+
+//NEW
+function saveItemsInRepository(itemsMap) {
+  const items = []
+  for(var key in itemsMap){
+    items.push(itemsMap[key]);
+  }
+  localStorage['ITEMS'] = JSON.stringify(items)
+  return Promise.resolve()
+}
+//
+//NEW
+function getItemsFromRepository() {
+  try {
+    const items = JSON.parse(localStorage['ITEMS'])
+    return Promise.resolve(items)
+  } catch {
+    return Promise.resolve([])
+  }
+}
+
+async function buildPage(){
+  if(!localStorage["ITEMS"] || localStorage["ITEMS"] == 'undefined'){ //Retirar este if para algo como if(!hasCachedItems)
+    const items = await getNewItems();
+    await saveItemsInRepository(items)
+  }
+  await rebuildTable()
+}
+
+// NEW
+async function rebuildTable(term = '') {
+  showLoadScreen()
+  let items = await getItemsFromRepository()
+
+  const sortBy = localStorage['iwillril_order_by']
+  items = items.sort((a, b) => {
+    const sortByVar = sortBy === 'new' ? -1 : 1
+
+    if(a.time_updated > b.time_updated) {
+      return 1 * sortByVar;
+    }
+    if (a.time_updated < b.time_updated) {
+      return -1 * sortByVar;
+    }
+    return 0;
+  })
+
+  if(term) {
+    items = items.filter((item) => {
+      let itemTitle = item.resolved_title;
+      itemTitle = itemTitle || item.given_title;
+      return itemTitle.toLowerCase().includes(term.toLowerCase())
+    })
+  }
+
+  table.render(items)
+  hideLoadScreen()
+  return Promise.resolve()
+}
+
+function showLoadScreen(){
+  if(document.getElementById("list_div"))
+    document.getElementById("list_div").style.opacity = 0.4;
+}
+
+function hideLoadScreen(){
+  if(document.getElementById("list_div"))
+    document.getElementById("list_div").style.opacity = 1;
+}
+
+function refreshList(){
+  function getCallback(resp){
+    if(resp.status == 403 || resp.status == 401){
+      localStorage['ITEMS'] = '';
+      Auth.authenticate();
+    }
+    else{
+      localStorage['ITEMS'] = resp.response.list || '';
+      updatePage();
+    }
+  }
+  Request.get(getCallback, 0);
+}
+
+function updatePage(term = null){
+  var list = RilList.getItemsArray(term);
+
+  if(document.querySelector("#table_list")){
+    hideLoadScreen();
+    ExtensionIcon.loaded();
+    table.render(list);
+    header.refresh();
+  }
+  ExtensionIcon.setUncountLabel(list.length);
+}

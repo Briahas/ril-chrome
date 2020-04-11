@@ -1,8 +1,11 @@
 function Auth(){}
-CONSUMER_KEY="11758-a73b85ac41814ed5b483f3a3";
+const CONSUMER_KEY="11758-a73b85ac41814ed5b483f3a3";
 Auth.isAuthenticate = function()
 {
-  return localStorage['access_token'] && localStorage['access_token'] != "null";
+  return new Promise((resolve, reject) => {
+    const isAuth =  localStorage['access_token'] && localStorage['access_token'] != "null";
+    resolve(isAuth)
+  })
 }
 
 Auth.authenticate = function(){
@@ -14,7 +17,7 @@ Auth.authenticate = function(){
   }
 
   var xhr = new XMLHttpRequest();
-  xhr.open("post", url, true);   
+  xhr.open("post", url, true);
   xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
   xhr.setRequestHeader("X-Accept", "application/json");
   xhr.onreadystatechange = function(){
@@ -25,14 +28,14 @@ Auth.authenticate = function(){
       Auth.redirectToPocket(code);
     }
   }
-  xhr.send(JSON.stringify(params)); 
+  xhr.send(JSON.stringify(params));
 }
 
 Auth.redirectToPocket = function(code){
   var redirectUri = chrome.extension.getURL('html/auth.html');
   chrome.tabs.create({'url': 'https://getpocket.com/auth/authorize?request_token='+code+'&redirect_uri='+redirectUri}, function(tab) {
 
-  });   
+  });
 }
 
 Auth.getConsumerKey = function(){
@@ -43,7 +46,7 @@ Auth.getConsumerKey = function(){
   }
 
   var xhr = new XMLHttpRequest();
-  xhr.open("post", url, true);   
+  xhr.open("post", url, true);
   xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
   xhr.setRequestHeader("X-Accept", "application/json");
   xhr.onreadystatechange = function(){
@@ -53,6 +56,7 @@ Auth.getConsumerKey = function(){
       localStorage['username'] = resp.username;
     }
   }
-  xhr.send(JSON.stringify(params)); 
+  xhr.send(JSON.stringify(params));
 }
 
+export default Auth

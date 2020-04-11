@@ -1,4 +1,5 @@
 Request = {}
+const CONSUMER_KEY="11758-a73b85ac41814ed5b483f3a3";
 
 Request._post = function(url, params, callback){
   var xhr = new XMLHttpRequest();
@@ -70,3 +71,5 @@ Request.delete = function(callback, item_id){
 
   Request._post(url, params, callback);
 }
+
+export default Request
